@@ -7,29 +7,32 @@ import {
   ActionInterface,
   PageSearchInfoInterface,
   PageBasicPropsInterface,
+  MethodEnum,
+  TableActionInterface,
+  ExchangeStatusParamsPositionEnum,
 } from '@/components/Interface';
 import DB from '@/DB';
 import { getValidSearchInfo } from '@/utils/utils';
 import { ConnectState } from '@/models/connect';
 
-const postPageList = ['manage_user_detail_follow', 'manage_user_detail_follower', 'manage_order'];
 const externalProcessingActionKeyList = ['add'];
 
 const PageBasic = (props: PageBasicPropsInterface) => {
   const { page, hasSearchForm = true, extraSearchInfo = {}, dispatch } = props;
-  const { requestUrl, basePageNum, basePageSize } = DB[page];
+
+  const { requestUrl, pageObj, requestMethod } = DB[page];
+  if(!pageObj || !Object.keys(pageObj).length) {
+    throw new Error('请传入正确的 pageObj');
+  }
 
   const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({
-    pageNum: basePageNum,
-    pageSize: basePageSize,
-  });
+  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({...pageObj});
 
   useEffect(() => {
     setLoading(true);
     const loadData = async () => {
-      const method = postPageList.indexOf(page) >= 0 ? 'POST' : 'GET';
+      const method = requestMethod || MethodEnum.GET;
       await dispatch({
         type: 'tableList/getTableList',
         payload: { requestUrl, searchInfo: { ...searchInfo, ...extraSearchInfo }, page, method },
@@ -55,7 +58,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     });
   };
 
-  const tableActionsHandle = async (action: ActionInterface, record: any) => {
+  const tableActionsHandle = async (action: TableActionInterface, record: any) => {
     try {
       // TODO: 各个 table 的 action 操作
       setLoading(true);
@@ -63,7 +66,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
         exchangeStatusUrl,
         exchangeStatusParamsKeyObj,
         exchangeStatusKey,
-        exchangeStatusParamsPosition = 'params',
+        exchangeStatusParamsPosition = ExchangeStatusParamsPositionEnum.Params,
         exchangeStatusObj = {},
         status = {},
       } = action;

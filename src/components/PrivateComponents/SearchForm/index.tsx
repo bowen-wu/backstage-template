@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Select, Input, Row, Col, Button, DatePicker } from 'antd';
 import moment from 'moment';
 import DB from '../../../DB/index';
-import { PropsInterface, ActionInterface } from '../../Interface';
+import { PropsInterface, SearchActionInterface } from '../../Interface';
 import styles from './index.less';
 
 const { Option } = Select;
@@ -53,7 +53,7 @@ export default (props: PropsInterface) => {
 
   const updateSearchInfo = (info: Object) => setSearchInfo(Object.assign({}, searchInfo, info));
 
-  const actionHandle = (action: ActionInterface) =>
+  const actionHandle = (action: SearchActionInterface) =>
     props.actionsHandle && props.actionsHandle(action, searchInfo);
 
   const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
@@ -127,13 +127,13 @@ export default (props: PropsInterface) => {
       <Row className={styles[`${flexDirection ? 'flexColumn' : 'flex'}`]} gutter={12}>
         {searchList.map((searchItem: SearchItemInterface) => (
           <Col key={searchItem.key} className={styles[`${flexDirection ? 'itemColumn' : 'item'}`]}>
-            <div className={styles.label}>{searchItem.label}：</div>
+            {styles.label ? <div className={styles.label}>{searchItem.label}：</div> : null}
             {searchTypeEle(searchItem)}
             {searchItem.extra ? <div className={styles.extra}>{searchItem.extra}</div> : null}
           </Col>
         ))}
         <div className={styles[`${flexDirection ? 'actionColumn' : 'action'}`]}>
-          {searchActions.map((action: ActionInterface) => (
+          {searchActions.map((action: SearchActionInterface) => (
             <Button key={action.key} type={action.type} onClick={() => actionHandle(action)}>
               {action.text}
             </Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
-import { PropsInterface, ActionInterface, TableColumnInterface } from '../../Interface';
+import { PropsInterface, TableActionInterface } from '../../Interface';
 import DB from '@/DB';
 import styles from './index.less';
 
@@ -9,31 +9,7 @@ const keyList = ['id', 'gid', 'ggid', 'rid'];
 
 export default (props: PropsInterface) => {
   const { page, dataSource, total } = props;
-  const {
-    tableInfo: { columnList, actionList },
-  } = DB[page];
-  columnList.map((column: TableColumnInterface) => {
-    if (column.needRender) {
-      if (column.renderDepend) {
-        column.render = (currentValue: string, record: any) => (
-          <span>
-            {column.renderDepend
-              ? column.renderDepend
-                  .reduce((result: string, depend: string) => `${result} - ${record[depend]}`, '')
-                  .slice(3)
-              : ''}
-          </span>
-        );
-      } else {
-        column.render = (currentValue: string) => (
-          <span>
-            {column.enumerate ? column.enumerate[`${currentValue}`] : column[`${currentValue}`]}
-          </span>
-        );
-      }
-    }
-    return column;
-  });
+  const {tableInfo: { columnList, actionList }} = DB[page];
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
     props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
@@ -44,7 +20,7 @@ export default (props: PropsInterface) => {
     dataIndex: 'action',
     render: (text: string, record: any) => (
       <span>
-        {actionList.map((actionItem: ActionInterface) => {
+        {actionList.map((actionItem: TableActionInterface) => {
           const { route = '', actionText = '', title = '' } = (() => {
             switch (actionItem.key) {
               case 'status':
@@ -78,7 +54,7 @@ export default (props: PropsInterface) => {
                 </Link>
               );
             }
-            if (actionItem.type === 'popconfirm') {
+            if (actionItem.type === 'popConfirm') {
               return (
                 <Popconfirm
                   key={actionItem.key}

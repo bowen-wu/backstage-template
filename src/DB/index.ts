@@ -6,9 +6,10 @@ const pageObj = {
 };
 
 export default {
-  manage_user: {
+  home: {
     detailsUrl: '',
     requestUrl: '',
+    requestMethod: '',
     searchInfo: {
       searchList: [
         {
@@ -63,7 +64,7 @@ export default {
         },
       ],
     },
-    ...pageObj,
+    pageObj,
   },
   span_item: {
     input: 5,

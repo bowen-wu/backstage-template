@@ -11,6 +11,23 @@ export enum ButtonType {
   Danger = 'danger',
 }
 
+export enum MethodEnum {
+  POST = 'post',
+  GET = 'get',
+}
+
+export enum SearchItemControlType {
+  Input = 'input',
+  Select = 'select',
+  RangePicker = 'rangePicker',
+  MonthPicker = 'monthPicker',
+}
+
+export enum ExchangeStatusParamsPositionEnum {
+  Params = 'params',
+  Data = 'data',
+}
+
 export interface ExtraActionItemInterface {
   type: ButtonType;
   text: string;
@@ -31,21 +48,28 @@ export interface ItemInterface {
   wrap?: boolean;
 }
 
-export interface ExtraInfoInfoInterface {
+export interface ExtraInfoInterface {
   title: object | string;
 }
 
 export interface ActionInterface {
   key: string;
-  text?: string;
+  text: string;
+}
+
+export interface SearchActionInterface extends ActionInterface{
+  type: ButtonType;
+}
+
+export interface TableActionInterface extends ActionInterface{
+  type: ButtonType | string;
   route?: string;
   status?: object;
   depend?: string;
-  type?: ButtonType | string;
-  extraInfo?: ExtraInfoInfoInterface;
+  extraInfo?: ExtraInfoInterface;
   exchangeStatusUrl: string;
   exchangeStatusKey: string;
-  exchangeStatusParamsPosition?: string;
+  exchangeStatusParamsPosition?: ExchangeStatusParamsPositionEnum;
   exchangeStatusParamsKeyObj: object;
   exchangeStatusObj?: object;
 }
@@ -60,7 +84,7 @@ export interface PropsInterface {
   page: string;
   total?: number;
   dataSource?: Array<any>;
-  actionsHandle?: (action: ActionInterface, searchInfo: object, record?: any) => void;
+  actionsHandle?: (action: TableActionInterface, searchInfo: object, record?: any) => void;
   pageChangeHandle?: (currentPage: number, pageSize: number | undefined) => void;
 }
 
@@ -206,12 +230,7 @@ export interface TableColumnInterface {
   title: string;
   dataIndex: string;
   key: string;
-  type?: string;
-  default?: Array<string>;
   render?: (text: any, record: any, index: number) => void;
-  needRender?: boolean;
-  enumerate?: object;
-  renderDepend?: Array<string>;
 }
 
 export interface DetailsModelState {

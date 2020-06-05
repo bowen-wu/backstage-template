@@ -1,5 +1,9 @@
 import request from '@/utils/request';
-import {ExchangeTableItemActionStatusInterface, PageSearchInfoInterface} from "@/components/Interface";
+import {
+  ExchangeStatusParamsPositionEnum,
+  ExchangeTableItemActionStatusInterface,
+  PageSearchInfoInterface
+} from "@/components/Interface";
 
 export async function getTableListInfo(url: string, method: string, params: PageSearchInfoInterface) {
   return request(url, {
@@ -8,7 +12,7 @@ export async function getTableListInfo(url: string, method: string, params: Page
   });
 }
 
-export async function exchangeTableItemActionStatus(url: string, params: ExchangeTableItemActionStatusInterface, paramsPosition: string) {
+export async function exchangeTableItemActionStatus(url: string, params: ExchangeTableItemActionStatusInterface, paramsPosition: ExchangeStatusParamsPositionEnum) {
   return request(url, {
     method: 'POST',
     [`${paramsPosition}`]: params,
