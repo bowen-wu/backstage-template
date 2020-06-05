@@ -1,0 +1,43 @@
+@import '../basic';
+
+.container {
+  padding-bottom: 16px;
+}
+
+.item {
+  .flex;
+}
+
+.itemColumn {
+  width: 50%;
+  .flex;
+  margin-bottom: 16px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.action {
+  margin-left: auto;
+  .flex;
+
+  :global {
+    .ant-btn {
+      margin-right: 8px;
+    }
+  }
+}
+
+.actionColumn {
+  margin: 24px 0 0 24px;
+}
+
+.extra {
+  margin-left: 16px;
+}
