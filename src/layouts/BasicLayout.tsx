@@ -107,7 +107,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return routers;
       }}
       itemRender={(route, params, routes, paths) => {
-        // const first = routes.indexOf(route) === 0;
+        console.log('routes -> ', routes);
         const last = routes.indexOf(route) === routes.length - 1;
         return !last ? (
           <Link to={`/${paths[paths.length - 1]}`}>{route.breadcrumbName}</Link>
@@ -116,7 +116,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         );
       }}
       footerRender={() => <DefaultFooter links={false} copyright="TEMPLATE" />}
-      menuDataRender={() => userPermissionsMenu}
+      menuDataRender={(menuList: MenuDataItem[]): MenuDataItem[] => {
+        return menuList;
+
+        // TODO: 使用 userPermissionsMenu
+        // return userPermissionsMenu;
+      }}
       rightContentRender={() => <RightContent />}
       {...props}
       {...settings}

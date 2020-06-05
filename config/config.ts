@@ -77,6 +77,7 @@ export default {
     {
       path: '/user',
       component: '../layouts/UserLayout',
+      name: 'user',
       routes: [
         {
           name: 'login',
@@ -87,12 +88,12 @@ export default {
     },
     {
       path: '/',
+      name: 'root',
       component: '../layouts/SecurityLayout',
       routes: [
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
           routes: [
             {
               path: '/',
@@ -100,10 +101,8 @@ export default {
             },
             {
               name: '首页',
-              icon: 'home',
               path: '/home',
               component: './home',
-              // hideInMenu: true,
             },
             {
               component: './404',

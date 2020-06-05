@@ -40,7 +40,7 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     const { isReady } = this.state;
     const { children, loading, currentUser } = this.props;
     // todo -> 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）,
-    console.log(currentUser);
+    console.log('currentUser -> ', currentUser);
     const isLogin = currentUser && currentUser.token && true;
     const queryString = stringify({
       redirect: window.location.href,
@@ -52,7 +52,6 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
 
     // TODO: delete && false
     if (!isLogin && false) {
-      console.log(111);
       return <Redirect to={`/user/login?${queryString}`} />;
     }
     return children;
