@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {Select, Input, Row, Col, Button, DatePicker} from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Select, Input, Row, Col, Button, DatePicker } from 'antd';
 import moment from 'moment';
 import DB from '../../../DB/index';
-import {SearchPropsInterface, SearchActionInterface} from '../../Interface';
+import { SearchPropsInterface, SearchActionInterface } from '../../Interface';
 import styles from './index.less';
 
 const basicSpanItem = {
@@ -13,8 +13,8 @@ const basicSpanItem = {
   action: 4,
   actionOffset: 0,
 };
-const {Option} = Select;
-const {MonthPicker, RangePicker} = DatePicker;
+const { Option } = Select;
+const { MonthPicker, RangePicker } = DatePicker;
 const rangePickerDateFormat = 'YYYY-MM-DD';
 const monthPickerDateFormat = 'YYYY-MM';
 
@@ -41,8 +41,10 @@ interface SearchItemInterface {
 }
 
 export default (props: SearchPropsInterface) => {
-  const {page} = props;
-  const {searchInfo: {searchList, searchActions, spanItem: userSpanItem}} = DB[page];
+  const { page } = props;
+  const {
+    searchInfo: { searchList, searchActions, spanItem: userSpanItem },
+  } = DB[page];
   const [searchInfo, setSearchInfo] = useState<object>({});
   const spanItem = Object.assign({}, basicSpanItem, userSpanItem);
 
@@ -51,16 +53,22 @@ export default (props: SearchPropsInterface) => {
   useEffect(() => {
     const searchInfoCopy = {};
     searchList.map((searchItem: SearchItemInterface) =>
-      Object.assign(searchInfoCopy, searchItem.type === 'rangePicker' ? {gmtCreateBegin: '', gmtCreateEnd: ''} : {[`${searchItem.key}`]: ''}),
+      Object.assign(
+        searchInfoCopy,
+        searchItem.type === 'rangePicker'
+          ? { gmtCreateBegin: '', gmtCreateEnd: '' }
+          : { [`${searchItem.key}`]: '' },
+      ),
     );
     setSearchInfo(searchInfoCopy);
   }, [searchList]);
 
   const updateSearchInfo = (info: Object) => setSearchInfo(Object.assign({}, searchInfo, info));
 
-  const actionHandle = (action: SearchActionInterface) => props.actionsHandle && props.actionsHandle(action, searchInfo);
+  const actionHandle = (action: SearchActionInterface) =>
+    props.actionsHandle && props.actionsHandle(action, searchInfo);
 
-  const handleChange = (value: string, key: string) => updateSearchInfo({[key]: value});
+  const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
 
   const searchTypeEle = (searchItem: SearchItemInterface) => {
     switch (searchItem.type) {
@@ -80,7 +88,7 @@ export default (props: SearchPropsInterface) => {
         return (
           <Select
             defaultValue={defaultValue}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             onChange={(value: string) => handleChange(value, searchItem.key)}
           >
             {optionList.map(option => (
@@ -102,14 +110,14 @@ export default (props: SearchPropsInterface) => {
           }
           return [];
         })();
-        const {placeholder = '请选择'} = searchItem;
+        const { placeholder = '请选择' } = searchItem;
         return (
           <RangePicker
             value={defaultValue}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             placeholder={[placeholder, placeholder]}
             onChange={(date, dateStringArr) =>
-              updateSearchInfo({gmtCreateBegin: dateStringArr[0], gmtCreateEnd: dateStringArr[1]})
+              updateSearchInfo({ gmtCreateBegin: dateStringArr[0], gmtCreateEnd: dateStringArr[1] })
             }
           />
         );
@@ -118,7 +126,7 @@ export default (props: SearchPropsInterface) => {
         return (
           <MonthPicker
             value={moment(searchItem.default, monthPickerDateFormat) || ''}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             disabledDate={searchItem.disabledDate}
             placeholder={searchItem.placeholder || '请选择'}
           />
@@ -132,7 +140,11 @@ export default (props: SearchPropsInterface) => {
     <div className={styles.container}>
       <Row gutter={12}>
         {searchList.map((searchItem: SearchItemInterface) => (
-          <Col key={searchItem.key} className={`${styles.margin} ${styles.flex}`} span={spanItem[searchItem.type] || 4}>
+          <Col
+            key={searchItem.key}
+            className={`${styles.margin} ${styles.flex}`}
+            span={spanItem[searchItem.type] || 4}
+          >
             {styles.label ? <div className={styles.label}>{searchItem.label}：</div> : null}
             {searchTypeEle(searchItem)}
             {searchItem.extra ? <div className={styles.extra}>{searchItem.extra}</div> : null}
@@ -141,8 +153,12 @@ export default (props: SearchPropsInterface) => {
         <Col span={spanItem.action} offset={spanItem.actionOffset}>
           <Row gutter={12} className={styles.flex}>
             {searchActions.map((action: SearchActionInterface) => (
-              <Col>
-                <Button key={action.key} type={action.type} className={styles.margin} onClick={() => actionHandle(action)}>
+              <Col key={action.key}>
+                <Button
+                  type={action.type}
+                  className={styles.margin}
+                  onClick={() => actionHandle(action)}
+                >
                   {action.text}
                 </Button>
               </Col>

@@ -10,6 +10,7 @@ import {
   MethodEnum,
   TableActionInterface,
   ExchangeStatusParamsPositionEnum,
+  ObjectInterface,
 } from '@/components/Interface';
 import DB from '@/DB';
 import { getValidSearchInfo } from '@/utils/utils';
@@ -18,14 +19,19 @@ import { ConnectState } from '@/models/connect';
 const PageBasic = (props: PageBasicPropsInterface) => {
   const { page, hasSearchForm = true, extraSearchInfo = {}, dispatch } = props;
 
-  const { requestUrl, pageObj, requestMethod, searchInfo: {externalProcessingActionKeyList} } = DB[page];
-  if(!pageObj || !Object.keys(pageObj).length) {
+  const {
+    requestUrl,
+    pageObj,
+    requestMethod,
+    searchInfo: { externalProcessingActionKeyList },
+  } = DB[page];
+  if (!pageObj || !Object.keys(pageObj).length) {
     throw new Error('请传入正确的 pageObj');
   }
 
   const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({...pageObj});
+  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageObj });
 
   useEffect(() => {
     setLoading(true);
@@ -102,6 +108,9 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     }
   };
 
+  const onRowSelectionChange = (selectedRows: Array<ObjectInterface>) =>
+    props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
+
   return (
     <Spin spinning={loading} size="large">
       {hasSearchForm ? <SearchForm page={page} actionsHandle={searchActionsHandle} /> : null}
@@ -111,6 +120,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
         total={props.tableList ? props.tableList[`${page}_total`] : 0}
         actionsHandle={tableActionsHandle}
         pageChangeHandle={pageChangeHandle}
+        onRowSelectionChange={onRowSelectionChange}
       />
     </Spin>
   );

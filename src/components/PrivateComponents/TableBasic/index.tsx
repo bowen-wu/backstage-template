@@ -1,13 +1,21 @@
 import React from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
-import { TablePropsInterface, TableActionInterface } from '../../Interface';
 import DB from '@/DB';
+import { TablePropsInterface, TableActionInterface, ObjectInterface } from '../../Interface';
 import styles from './index.less';
 
 export default (props: TablePropsInterface) => {
   const { page, dataSource, total } = props;
-  const {tableInfo: { columnList, actionList, scroll = {}, keyList }} = DB[page];
+  const {
+    tableInfo: {
+      columnList,
+      actionList,
+      scroll = {},
+      keyList = [],
+      rowSelection: userRowSelection,
+    },
+  } = DB[page];
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
     props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
@@ -83,6 +91,12 @@ export default (props: TablePropsInterface) => {
     ),
   };
 
+  const onRowSelectionChange = (selectedRowKeys: string, selectedRows: Array<ObjectInterface>) =>
+    props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
+
+  const rowSelection = userRowSelection
+    ? Object.assign({}, userRowSelection, { onChange: onRowSelectionChange })
+    : null;
   const columns = [...columnList, actionList.length ? action : {}];
   return (
     <div className={styles.container}>
@@ -90,6 +104,7 @@ export default (props: TablePropsInterface) => {
         columns={columns}
         dataSource={dataSource}
         scroll={scroll}
+        rowSelection={rowSelection}
         pagination={{
           total,
           pageSizeOptions: ['1', '10', '20', '30', '40'],

@@ -66,11 +66,11 @@ export interface ActionInterface {
   text: string;
 }
 
-export interface SearchActionInterface extends ActionInterface{
+export interface SearchActionInterface extends ActionInterface {
   type: ButtonType;
 }
 
-export interface TableActionInterface extends ActionInterface{
+export interface TableActionInterface extends ActionInterface {
   type: ButtonType | string;
   route?: string;
   status?: object;
@@ -98,6 +98,7 @@ export interface PropsInterface {
 
 export interface TablePropsInterface extends PropsInterface {
   actionsHandle?: (action: TableActionInterface, searchInfo: object, record?: any) => void;
+  onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
 }
 
 export interface SearchPropsInterface extends PropsInterface {
@@ -241,6 +242,7 @@ export interface PageBasicPropsInterface {
   extraSearchInfo?: object;
   actionsHandle?: (action: ActionInterface, record: any) => void;
   searchActionsHandle?: (action: ActionInterface) => void;
+  onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   refresh?: Boolean;
   dispatch: Dispatch;
 }
