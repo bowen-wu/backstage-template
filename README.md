@@ -153,6 +153,7 @@ yarn lint:fix
     | label  | search item label 标签的文本 | string | '' | false |
     | key | React 需要的 key，不能有相同的 | string | - | true |
     | placeholder | 控件的占位文本 | string | '' | false |
+    | optionRequestUrl | 当 ` type === SearchItemControlType.Select ` 时设置才生效。获取选项列表请求的 url, 当 ` optionRequestUrl ` 和 ` optionList ` 同时存在时，以 ` optionRequestUrl ` 为主 | string | - | false |
     | optionList | 当 ` type === SearchItemControlType.Select ` 时设置才生效。选项列表 | Array | - | false |
     | default | 默认值 | 由控件类型决定，` string | Array<string> ` | - | false |
     | disabledDate | 当控件类型为 ` SearchItemControlType.MonthPicker ` 时才生效。不可选择的日期 | (currentDate: moment) => boolean | - | false |
@@ -173,6 +174,7 @@ yarn lint:fix
     | title | 列头显示文字 | string | - | true |
     | dataIndex | 列数据在数据项中对应的 key | string | - | true |
     | key  | React 需要的 key，和 dataIndex 保持一致即可 | string | - | true |
+    | fixed | 列是否固定，可选 true(等效于 left) 'left' 'right' | boolean 或 string | false | false |
     | render | 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引 | Function(text, record, index) {} | - | false |
     
     ` actionList<Object> ` 字段说明

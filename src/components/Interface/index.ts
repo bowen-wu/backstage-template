@@ -151,23 +151,14 @@ export interface ObjectInterface {
 }
 
 export interface TableListModelState {
-  manage_user_total?: number;
-  manage_user_detail_account_total?: number;
-  manage_user_detail_follow_total?: number;
-  manage_user_detail_follower_total?: number;
-  push_total?: number;
-  customer_feedback_total?: number;
-  authority_account_number_total?: number;
-  authority_role_total?: number;
+  // TODO: 需要增加 total 和 list
+  //   manage_user_total?: number;
+  //   manage_user_list?: Array<any>;
+}
 
-  manage_user_list?: Array<any>;
-  manage_user_detail_account_list?: Array<any>;
-  manage_user_detail_follow_list?: Array<any>;
-  manage_user_detail_follower_list?: Array<any>;
-  push_list?: Array<any>;
-  customer_feedback_list?: Array<any>;
-  authority_account_number_list?: Array<any>;
-  authority_role_list?: Array<any>;
+export interface SearchFormModelState {
+  // TODO: 需要增加 list
+  //    manage_user_list?: Array<any>;
 }
 
 export interface UserModelType {
@@ -195,6 +186,18 @@ export interface TableListModelType {
   };
   reducers: {
     saveTableList: Reducer<TableListModelState>;
+  };
+  subscriptions?: object;
+}
+
+export interface SearchFormModelType {
+  namespace: 'searchForm';
+  state: SearchFormModelState;
+  effects: {
+    getOptionList: Effect;
+  };
+  reducers: {
+    saveOptionList: Reducer<SearchFormModelState>;
   };
   subscriptions?: object;
 }

@@ -34,6 +34,7 @@ interface SearchItemInterface {
   label: string;
   placeholder?: string;
   optionList?: Array<SearchItemOptionInterface>;
+  optionRequestUrl?: string;
   default?: string | Array<string>;
   extra?: string;
   disabledDate?: SearchItemDisabledDateInterface;
@@ -45,15 +46,12 @@ export default (props: SearchPropsInterface) => {
   const [searchInfo, setSearchInfo] = useState<object>({});
   const spanItem = Object.assign({}, basicSpanItem, userSpanItem);
 
+  // TODO: select 后台获取
+
   useEffect(() => {
     const searchInfoCopy = {};
     searchList.map((searchItem: SearchItemInterface) =>
-      Object.assign(
-        searchInfoCopy,
-        searchItem.type === 'rangePicker'
-          ? {gmtCreateBegin: '', gmtCreateEnd: ''}
-          : {[`${searchItem.key}`]: ''},
-      ),
+      Object.assign(searchInfoCopy, searchItem.type === 'rangePicker' ? {gmtCreateBegin: '', gmtCreateEnd: ''} : {[`${searchItem.key}`]: ''}),
     );
     setSearchInfo(searchInfoCopy);
   }, [searchList]);
