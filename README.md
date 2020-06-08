@@ -144,6 +144,7 @@ yarn lint:fix
     | :----: | :----: | :----: | :----: | :----: |
     | columnList  | table 中的列描述数据对象 | Array<Object> | - | true |
     | actionList  | table 中的操作项 | Array<Object> | - | false |
+    | scroll | 表格是否可滚动，配置项 | object | - | false |
     
     ` searchList<Object> ` 字段说明
     
@@ -176,6 +177,7 @@ yarn lint:fix
     | key  | React 需要的 key，和 dataIndex 保持一致即可 | string | - | true |
     | fixed | 列是否固定，可选 true(等效于 left) 'left' 'right' | boolean 或 string | false | false |
     | render | 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引 | Function(text, record, index) {} | - | false |
+    | width | 列宽度 | string 或 number | - | false |
     
     ` actionList<Object> ` 字段说明
     
@@ -217,4 +219,11 @@ yarn lint:fix
     | action | action 控件占据 span | number | 4 | false |
     | actionOffset | actionOffset 控件的便宜 span | number | 0 | false |
     
+    ` scroll ` 字段说明
+    
+    |  参数 | 说明 | 类型  | 默认值 | required | 
+    | :----: | :----: | :----: | :----: | :----: |
+    | x | 设置横向滚动，也可用于指定滚动区域的宽和高，可以设置为像素值，百分比，true 和 'max-content' | number 或 true | - | false |
+    | y | 设置纵向滚动，也可用于指定滚动区域的宽和高，可以设置为像素值，百分比，true 和 'max-content' | number 或 true | - | false |
+    | rangePicker | 当分页、排序、筛选变化后是否滚动到表格顶部 | boolean | - | false |
         

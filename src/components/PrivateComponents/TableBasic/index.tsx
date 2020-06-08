@@ -9,7 +9,7 @@ const keyList = ['id', 'gid', 'ggid', 'rid'];
 
 export default (props: TablePropsInterface) => {
   const { page, dataSource, total } = props;
-  const {tableInfo: { columnList, actionList }} = DB[page];
+  const {tableInfo: { columnList, actionList, scroll = {} }} = DB[page];
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
     props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
@@ -18,6 +18,7 @@ export default (props: TablePropsInterface) => {
     title: '操作',
     key: 'action',
     dataIndex: 'action',
+    fixed: columnList.some((column: any) => !!column.fixed) ? 'right' : false,
     render: (text: string, record: any) => (
       <span>
         {actionList.map((actionItem: TableActionInterface) => {
@@ -90,6 +91,7 @@ export default (props: TablePropsInterface) => {
       <Table
         columns={columns}
         dataSource={dataSource}
+        scroll={scroll}
         pagination={{
           total,
           pageSizeOptions: ['1', '10', '20', '30', '40'],

@@ -136,14 +136,22 @@ export default {
       ],
     },
     tableInfo: {
+      scroll: {
+        x: 1200
+      },
       columnList: [
+        {
+          title: 'test',
+          dataIndex: 'test',
+          key: 'test',
+        },
         {
           title: '用户ID',
           dataIndex: 'id',
           key: 'id1',
         },
         {
-          title: '用户ID',
+          title: '用户ID222',
           dataIndex: 'id',
           key: 'id2',
         },
@@ -181,6 +189,21 @@ export default {
           title: '用户ID',
           dataIndex: 'id',
           key: 'id9',
+        },
+        {
+          title: '用户ID',
+          dataIndex: 'id',
+          key: 'id10',
+        },
+        {
+          title: '用户ID',
+          dataIndex: 'id',
+          key: 'id11',
+        },
+        {
+          title: '用户ID',
+          dataIndex: 'id',
+          key: 'id12',
         },
       ],
       actionList: [
