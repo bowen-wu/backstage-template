@@ -137,6 +137,7 @@ yarn lint:fix
     | searchList  | searchForm 中的搜索项 | Array<Object> | - | true |
     | searchActions  | searchForm 中的操作项 | Array<Object> | - | false |
     | spanItem | 各个类型的控件占据的 span | SpanItemInterface | - | false |
+    | externalProcessingActionKeyList | 外部处理的 action 的 key 的集合 | Array | - | false |
 
     ` tableInfo ` 字段说明
     
@@ -145,6 +146,7 @@ yarn lint:fix
     | columnList  | table 中的列描述数据对象 | Array<Object> | - | true |
     | actionList  | table 中的操作项 | Array<Object> | - | false |
     | scroll | 表格是否可滚动，配置项 | object | - | false |
+    | keyList | table 的 ` rowKey ` 的集合 | Array | - | false | 
     
     ` searchList<Object> ` 字段说明
     

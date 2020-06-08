@@ -15,12 +15,10 @@ import DB from '@/DB';
 import { getValidSearchInfo } from '@/utils/utils';
 import { ConnectState } from '@/models/connect';
 
-const externalProcessingActionKeyList = ['add'];
-
 const PageBasic = (props: PageBasicPropsInterface) => {
   const { page, hasSearchForm = true, extraSearchInfo = {}, dispatch } = props;
 
-  const { requestUrl, pageObj, requestMethod } = DB[page];
+  const { requestUrl, pageObj, requestMethod, searchInfo: {externalProcessingActionKeyList} } = DB[page];
   if(!pageObj || !Object.keys(pageObj).length) {
     throw new Error('请传入正确的 pageObj');
   }

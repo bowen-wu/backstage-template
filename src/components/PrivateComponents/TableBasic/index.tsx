@@ -5,11 +5,9 @@ import { TablePropsInterface, TableActionInterface } from '../../Interface';
 import DB from '@/DB';
 import styles from './index.less';
 
-const keyList = ['id', 'gid', 'ggid', 'rid'];
-
 export default (props: TablePropsInterface) => {
   const { page, dataSource, total } = props;
-  const {tableInfo: { columnList, actionList, scroll = {} }} = DB[page];
+  const {tableInfo: { columnList, actionList, scroll = {}, keyList }} = DB[page];
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
     props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
@@ -46,8 +44,8 @@ export default (props: TablePropsInterface) => {
           if (actionText) {
             if (route) {
               const href = `${route}?${keyList
-                .map(key => record[key] && `${key}=${record[key]}`)
-                .filter(str => Boolean(str))
+                .map((key: string) => record[key] && `${key}=${record[key]}`)
+                .filter((str: string) => Boolean(str))
                 .join('&')}`;
               return (
                 <Link key={actionItem.key} className={styles.actionItem} to={href}>
