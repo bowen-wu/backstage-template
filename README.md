@@ -136,7 +136,8 @@ yarn lint:fix
     | :----: | :----: | :----: | :----: | :----: |
     | searchList  | searchForm 中的搜索项 | Array<Object> | - | true |
     | searchActions  | searchForm 中的操作项 | Array<Object> | - | false |
-    
+    | spanItem | 各个类型的控件占据的 span | SpanItemInterface | - | false |
+
     ` tableInfo ` 字段说明
     
     |  参数 | 说明 | 类型  | 默认值 | required | 
@@ -202,5 +203,16 @@ yarn lint:fix
     |  参数 | 说明 | 类型  | 默认值 | required | 
     | :----: | :----: | :----: | :----: | :----: |
     | title | ` popConfirm ` 的 title | object 或 string | - | true |
+    
+    ` SpanItemInterface ` 字段说明
+    
+    |  参数 | 说明 | 类型  | 默认值 | required | 
+    | :----: | :----: | :----: | :----: | :----: |
+    | input | input 控件占据 span | number | 4 | false |
+    | select | select 控件占据 span | number | 4 | false |
+    | rangePicker | rangePicker 控件占据 span | number | 8 | false |
+    | monthPicker | monthPicker 控件占据 span | number | 4 | false |
+    | action | action 控件占据 span | number | 4 | false |
+    | actionOffset | actionOffset 控件的便宜 span | number | 0 | false |
     
         

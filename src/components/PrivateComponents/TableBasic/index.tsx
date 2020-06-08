@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
-import { PropsInterface, TableActionInterface } from '../../Interface';
+import { TablePropsInterface, TableActionInterface } from '../../Interface';
 import DB from '@/DB';
 import styles from './index.less';
 
 const keyList = ['id', 'gid', 'ggid', 'rid'];
 
-export default (props: PropsInterface) => {
+export default (props: TablePropsInterface) => {
   const { page, dataSource, total } = props;
   const {tableInfo: { columnList, actionList }} = DB[page];
 

@@ -28,6 +28,15 @@ export enum ExchangeStatusParamsPositionEnum {
   Data = 'data',
 }
 
+export interface SpanItemInterface {
+  input: number;
+  select: number;
+  RangePicker: number;
+  MonthPicker: number;
+  action: number;
+  actionOffset: number;
+}
+
 export interface ExtraActionItemInterface {
   type: ButtonType;
   text: string;
@@ -84,8 +93,15 @@ export interface PropsInterface {
   page: string;
   total?: number;
   dataSource?: Array<any>;
-  actionsHandle?: (action: TableActionInterface, searchInfo: object, record?: any) => void;
   pageChangeHandle?: (currentPage: number, pageSize: number | undefined) => void;
+}
+
+export interface TablePropsInterface extends PropsInterface {
+  actionsHandle?: (action: TableActionInterface, searchInfo: object, record?: any) => void;
+}
+
+export interface SearchPropsInterface extends PropsInterface {
+  actionsHandle?: (action: SearchActionInterface, searchInfo: object, record?: any) => void;
 }
 
 export interface LoginParamsType {
