@@ -1,4 +1,4 @@
-import {TableListModelType} from "@/components/Interface";
+import {MethodEnum, TableListModelType, ExchangeStatusParamsPositionEnum} from "@/components/Interface";
 import {exchangeTableItemActionStatus, getTableListInfo} from "@/services/tableList";
 
 const TableList: TableListModelType = {
@@ -13,7 +13,7 @@ const TableList: TableListModelType = {
    */
   effects: {
     * getTableList({payload}, {call, put}) {
-      const {requestUrl, searchInfo, page, method = 'GET'} = payload;
+      const {requestUrl, searchInfo, page, method = MethodEnum.GET} = payload;
       const response = yield call(getTableListInfo, requestUrl, method, searchInfo);
       yield put({
         type: 'saveTableList',
@@ -22,7 +22,7 @@ const TableList: TableListModelType = {
     },
 
     * exchangeTableItemActionStatus({payload}, {call}) {
-      const {exchangeStatusUrl, params, paramsPosition = 'params'} = payload;
+      const {exchangeStatusUrl, params, paramsPosition = ExchangeStatusParamsPositionEnum.Params} = payload;
       yield call(exchangeTableItemActionStatus, exchangeStatusUrl, params, paramsPosition);
     },
   },

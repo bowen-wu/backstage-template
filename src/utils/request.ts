@@ -51,8 +51,8 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 基础参数
  */
-const baseUrl = '';
-const basePrefix = '';
+const baseUrl = 'http://192.168.7.10:8081';
+const basePrefix = '/audit-manager';
 
 /**
  * 配置request请求时的默认参数
@@ -70,13 +70,13 @@ request.interceptors.request.use((url, options) => ({
   options: {
     ...options,
     headers: {
-      adminToken: window.localStorage.getItem('adminToken') || '',
-      adminUserId: window.localStorage.getItem('adminUserId') || '',
+      token: window.localStorage.getItem('token') || '',
     },
   },
 }));
 
 request.interceptors.response.use(async response => {
+  // TODO: response interceptors
   const data = await response.clone().json();
   if (data.code === 3 && window.localStorage.getItem('tokenExpired') !== 'expired') {
     window.localStorage.setItem('tokenExpired', 'expired');

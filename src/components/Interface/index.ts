@@ -84,8 +84,6 @@ export interface TableActionInterface extends ActionInterface {
 }
 
 export interface PageSearchInfoInterface {
-  pageNum: number;
-  pageSize: number;
   [propsName: string]: number | string;
 }
 

@@ -119,5 +119,5 @@
     "config/**/*.js*",
     "scripts/**/*.js"
   ],
-  "proxy": "http://api.zgzfang.com"
+  "proxy": "http://192.168.7.10:8081/"
 }
