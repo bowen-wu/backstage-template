@@ -252,3 +252,12 @@ yarn lint:fix
     | data  | 后台接口返回的包装的字段 | string  | data |  false   |
     | total |       总条数     | string |     total      |  false   |
     | list | 数组字段 | string | list | false |
+    
+    ` pageObj ` 字段说明
+    
+    | 参数  |               说明               |  类型   |   默认值   | required |
+    | :---: | :------------------------------: | :-----: | :--------: | :------: |
+    | pageSizeFiled  | pageSize 字段名称 | string  | - |   true  |
+    | currentFiled |       currentPage 字段名称     | string |     -      |  true   |
+    | [`${pageSizeFiled}`] | pageSize 字段 | number | - | true |
+    | [`${currentFiled}`] | currentPage 字段 | number | - | true |

@@ -32,7 +32,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
 
   const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageObj });
+  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ [`${pageObj.currentFiled}`]: pageObj[`${pageObj.currentFiled}`], [`${pageObj.pageSizeFiled}`]: pageObj[`${pageObj.pageSizeFiled}`] });
 
   useEffect(() => {
     setLoading(true);
@@ -54,12 +54,10 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       }
       return;
     }
+    console.log('searchInfo -> ', searchInfo);
     setSearchInfo({
       ...getValidSearchInfo(searchInformation),
-      ...{
-        pageNum: searchInfo.pageNum,
-        pageSize: searchInfo.pageSize,
-      },
+      ...searchInfo,
     });
   };
 
@@ -105,7 +103,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   const pageChangeHandle = (currentPage: number, pageSize: number | undefined) => {
     const total = props.tableList ? props.tableList[`${page}_total`] : 0;
     if (pageSize && total > pageSize) {
-      setSearchInfo({ ...searchInfo, ...{ pageNum: currentPage, pageSize } });
+      setSearchInfo({ ...searchInfo, ...{ [`${pageObj.currentFiled}`]: currentPage, [`${pageObj.pageSizeFiled}`]: pageSize } });
     }
   };
 

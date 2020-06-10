@@ -7,8 +7,10 @@ const lastDayStr = getDayStr(-1);
 const isDefault = true;
 
 const pageObj = {
-  basePageNum: 1,
-  basePageSize: 10,
+  currentFiled: 'pageIndex',
+  pageSizeFiled: 'pageSize',
+  pageIndex: 1,
+  pageSize: 10,
 };
 
 const tableListRelatedFields = {
