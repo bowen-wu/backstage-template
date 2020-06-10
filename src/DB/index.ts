@@ -93,8 +93,7 @@ export default {
           type: 'rangePicker',
           label: '选择创建日期',
           key: 'order_create_time',
-          needRender: true,
-          renderDepend: ['startDate', 'endDate'],
+          pickerFiledList: ['auditTimeStart', 'auditTimeEnd'],
           default: [lastDayStr, lastDayStr],
         },
         {

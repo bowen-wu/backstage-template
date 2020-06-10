@@ -38,6 +38,7 @@ interface SearchItemInterface {
   default?: string | Array<string>;
   extra?: string;
   disabledDate?: SearchItemDisabledDateInterface;
+  pickerFiledList?: Array<string>;
 }
 
 export default (props: SearchPropsInterface) => {
@@ -52,14 +53,29 @@ export default (props: SearchPropsInterface) => {
 
   useEffect(() => {
     const searchInfoCopy = {};
-    searchList.map((searchItem: SearchItemInterface) =>
+    searchList.map((searchItem: SearchItemInterface) => {
+      const defaultValue: any = (() => {
+        if (searchItem.type === 'rangePicker' && searchItem.default) {
+          if (searchItem.default instanceof Array && searchItem.default.length === 2) {
+            return [
+              moment(searchItem.default[0], rangePickerDateFormat),
+              moment(searchItem.default[1], rangePickerDateFormat),
+            ];
+          }
+          throw new Error('rangePicker default 必须是数组，且 length === 2！');
+        }
+        return ['', ''];
+      })();
+      if(searchItem.type === 'rangePicker' && (!searchItem.pickerFiledList || searchItem.pickerFiledList.length !== 2)) {
+        throw new Error('pickerFiledList 字段必须提供！');
+      }
       Object.assign(
         searchInfoCopy,
         searchItem.type === 'rangePicker'
-          ? { gmtCreateBegin: '', gmtCreateEnd: '' }
+          ? { [`${(searchItem.pickerFiledList as Array<string>)[0]}`]: defaultValue[0], [`${(searchItem.pickerFiledList as Array<string>)[1]}`]: defaultValue[1] }
           : { [`${searchItem.key}`]: '' },
-      ),
-    );
+      );
+    });
     setSearchInfo(searchInfoCopy);
   }, [searchList]);
 
@@ -98,26 +114,20 @@ export default (props: SearchPropsInterface) => {
         );
       }
       case 'rangePicker': {
-        const defaultValue: any = (() => {
-          if (searchItem.default) {
-            if (searchItem.default instanceof Array && searchItem.default.length === 2) {
-              return [
-                moment(searchItem.default[0], rangePickerDateFormat),
-                moment(searchItem.default[1], rangePickerDateFormat),
-              ];
-            }
-            throw new Error('rangePicker default 必须是数组，且 length === 2！');
-          }
-          return [];
-        })();
         const { placeholder = '请选择' } = searchItem;
+        if(!searchItem.pickerFiledList || searchItem.pickerFiledList.length !== 2) {
+          throw new Error('pickerFiledList 字段必须提供！');
+        }
+        const pickerFirstFiled = searchItem.pickerFiledList[0];
+        const pickerSecondFiled = searchItem.pickerFiledList[1];
         return (
           <RangePicker
-            value={defaultValue}
+            value={searchInfo[pickerFirstFiled] && searchInfo[pickerSecondFiled] ? [moment(searchInfo[pickerFirstFiled], rangePickerDateFormat), moment(searchInfo[pickerSecondFiled], monthPickerDateFormat)] : []}
             style={{ flex: 1 }}
+            allowClear={false}
             placeholder={[placeholder, placeholder]}
             onChange={(date, dateStringArr) =>
-              updateSearchInfo({ gmtCreateBegin: dateStringArr[0], gmtCreateEnd: dateStringArr[1] })
+              updateSearchInfo({ [`${pickerFirstFiled}`]: dateStringArr[0], [`${pickerSecondFiled}`]: dateStringArr[1] })
             }
           />
         );
