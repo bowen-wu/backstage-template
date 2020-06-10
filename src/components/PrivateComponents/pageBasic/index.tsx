@@ -23,7 +23,8 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     requestUrl,
     pageObj,
     requestMethod,
-    searchInfo: { externalProcessingActionKeyList },
+    searchInfo: { externalProcessingActionKeyList = [] },
+    tableListRelatedFields
   } = DB[page];
   if (!pageObj || !Object.keys(pageObj).length) {
     throw new Error('请传入正确的 pageObj');
@@ -39,7 +40,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       const method = requestMethod || MethodEnum.GET;
       await dispatch({
         type: 'tableList/getTableList',
-        payload: { requestUrl, searchInfo: { ...searchInfo, ...extraSearchInfo }, page, method },
+        payload: { requestUrl, searchInfo: { ...searchInfo, ...extraSearchInfo }, page, method, tableListRelatedFields },
       });
       setLoading(false);
     };

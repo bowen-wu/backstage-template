@@ -136,6 +136,7 @@ yarn lint:fix
     | searchInfo | search form 相关信息 | Object | - | false |
     | tableInfo | table 相关信息 | Object | 无 | true |
     | pageObj | 页码相关信息 | Object | 无 | true |
+    | tableListRelatedFields | 接口获取的 table 相关字段 | object | - | false |
 
     `searchInfo` 字段说明
 
@@ -243,3 +244,11 @@ yarn lint:fix
     | :---: | :------------------------------: | :-----: | :--------: | :------: |
     | fixed |       把选择框列固定在左边       | boolean |     -      |  false   |
     | type  | 多选/单选，`checkbox` or `radio` | string  | `checkbox` |  false   |
+    
+    ` tableListRelatedFields ` 字段说明
+    
+    | 参数  |               说明               |  类型   |   默认值   | required |
+    | :---: | :------------------------------: | :-----: | :--------: | :------: |
+    | data  | 后台接口返回的包装的字段 | string  | data |  false   |
+    | total |       总条数     | string |     total      |  false   |
+    | list | 数组字段 | string | list | false |

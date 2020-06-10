@@ -11,6 +11,12 @@ const pageObj = {
   basePageSize: 10,
 };
 
+const tableListRelatedFields = {
+  total: 'totalCnt',
+  data: 'data',
+  list: 'list',
+};
+
 export default {
   home: {
     detailsUrl: '',
