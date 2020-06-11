@@ -30,9 +30,11 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     throw new Error('请传入正确的 pageObj');
   }
 
+  const pageInfo = {[`${pageObj.currentFiled}`]: pageObj[`${pageObj.currentFiled}`], [`${pageObj.pageSizeFiled}`]: pageObj[`${pageObj.pageSizeFiled}`]};
+
   const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ [`${pageObj.currentFiled}`]: pageObj[`${pageObj.currentFiled}`], [`${pageObj.pageSizeFiled}`]: pageObj[`${pageObj.pageSizeFiled}`] });
+  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
 
   useEffect(() => {
     setLoading(true);
@@ -54,11 +56,14 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       }
       return;
     }
-    console.log('searchInfo -> ', searchInfo);
-    setSearchInfo({
-      ...getValidSearchInfo(searchInformation),
-      ...searchInfo,
-    });
+    if(action.key === 'reset') {
+      setSearchInfo({...pageInfo});
+    } else {
+      setSearchInfo({
+        ...getValidSearchInfo(searchInformation),
+        ...searchInfo,
+      });
+    }
   };
 
   const tableActionsHandle = async (action: TableActionInterface, record: any) => {

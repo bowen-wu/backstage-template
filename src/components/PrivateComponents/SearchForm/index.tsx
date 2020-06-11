@@ -81,8 +81,12 @@ export default (props: SearchPropsInterface) => {
 
   const updateSearchInfo = (info: Object) => setSearchInfo(Object.assign({}, searchInfo, info));
 
-  const actionHandle = (action: SearchActionInterface) =>
-    props.actionsHandle && props.actionsHandle(action, searchInfo);
+  const actionHandle = (action: SearchActionInterface) => {
+    if(action.key === 'reset') {
+      setSearchInfo({});
+    }
+    props.actionsHandle && props.actionsHandle(action, action.key === 'reset' ? {} : searchInfo);
+  };
 
   const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
 
@@ -91,6 +95,7 @@ export default (props: SearchPropsInterface) => {
       case 'input':
         return (
           <Input
+            value={searchInfo[searchItem.key]}
             placeholder={searchItem.placeholder || '请输入'}
             onChange={e => handleChange(e.target.value, searchItem.key)}
           />
@@ -103,7 +108,7 @@ export default (props: SearchPropsInterface) => {
         const defaultValue = defaultArray.length ? defaultArray[0].value : '';
         return (
           <Select
-            defaultValue={defaultValue}
+            value={searchInfo[searchItem.key] || defaultValue}
             style={{ flex: 1 }}
             onChange={(value: string) => handleChange(value, searchItem.key)}
           >
