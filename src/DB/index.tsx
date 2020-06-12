@@ -1,5 +1,6 @@
 // searchItem 的 type === rangePicker 时，default 必须是数组，且 length === 2
 
+import React from 'react';
 import moment from 'moment';
 import { getDayStr, getLastMonthStr } from '@/utils/utils';
 import {MethodEnum} from "@/components/Interface";
@@ -20,7 +21,7 @@ const tableListRelatedFields = {
   list: 'list',
 };
 
-export default {
+export default () => ({
   home: {
     detailsUrl: '',
     requestUrl: '',
@@ -831,4 +832,4 @@ export default {
     },
     pageObj,
   },
-};
+});

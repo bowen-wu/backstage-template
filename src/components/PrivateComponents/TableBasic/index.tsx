@@ -1,9 +1,11 @@
 import React from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
-import DB from '@/DB';
+import DBFn from '@/DB';
 import { TablePropsInterface, TableActionInterface, ObjectInterface } from '../../Interface';
 import styles from './index.less';
+
+const DB = DBFn();
 
 export default (props: TablePropsInterface) => {
   const { page, dataSource, total } = props;

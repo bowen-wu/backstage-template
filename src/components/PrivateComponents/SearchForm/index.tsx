@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Select, Input, Row, Col, Button, DatePicker, Cascader } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import DB from '../../../DB/index';
+import DBFn from '@/DB';
 import {SearchPropsInterface, SearchActionInterface, SearchItemControlType, MethodEnum} from '../../Interface';
 import styles from './index.less';
 import {ObjectInterface} from "@/components/Interface";
 import {ConnectState} from "@/models/connect";
+
+const DB = DBFn();
 
 const basicSpanItem = {
   input: 4,

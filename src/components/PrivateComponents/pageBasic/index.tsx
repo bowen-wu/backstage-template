@@ -12,9 +12,11 @@ import {
   ExchangeStatusParamsPositionEnum,
   ObjectInterface,
 } from '@/components/Interface';
-import DB from '@/DB';
+import DBFn from '@/DB';
 import { getValidSearchInfo } from '@/utils/utils';
 import { ConnectState } from '@/models/connect';
+
+const DB = DBFn();
 
 const PageBasic = (props: PageBasicPropsInterface) => {
   const { page, hasSearchForm = true, extraSearchInfo = {}, dispatch } = props;
