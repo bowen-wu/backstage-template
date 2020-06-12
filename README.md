@@ -170,7 +170,7 @@ yarn lint:fix
     | default | 默认值 | 由控件类型决定，`string | Array<string>` | - | false |
     | disabledDate | 当控件类型为 `SearchItemControlType.MonthPicker` 时才生效。不可选择的日期 | (currentDate: moment) => boolean | - | false |
     | extra | 控件后面需要补充的文字 | string | - | false |
-    | pickerFiledList | 当 `type === SearchItemControlType.rangePicker` 时必须设置，为 rangePicker 的字段名称 | Array<string> length === 2 | - | false |
+    | pickerFieldList | 当 `type === SearchItemControlType.rangePicker` 时必须设置，为 rangePicker 的字段名称 | Array<string> length === 2 | - | false |
 
     `searchActions<Object>` 字段说明
 
@@ -258,7 +258,7 @@ yarn lint:fix
     
     | 参数  |               说明               |  类型   |   默认值   | required |
     | :---: | :------------------------------: | :-----: | :--------: | :------: |
-    | pageSizeFiled  | pageSize 字段名称 | string  | - |   true  |
-    | currentFiled |       currentPage 字段名称     | string |     -      |  true   |
-    | [`${pageSizeFiled}`] | pageSize 字段 | number | - | true |
-    | [`${currentFiled}`] | currentPage 字段 | number | - | true |
+    | pageSizeField  | pageSize 字段名称 | string  | - |   true  |
+    | currentField |       currentPage 字段名称     | string |     -      |  true   |
+    | [`${pageSizeField}`] | pageSize 字段 | number | - | true |
+    | [`${currentField}`] | currentPage 字段 | number | - | true |

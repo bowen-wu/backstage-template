@@ -30,7 +30,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     throw new Error('请传入正确的 pageObj');
   }
 
-  const pageInfo = {[`${pageObj.currentFiled}`]: pageObj[`${pageObj.currentFiled}`], [`${pageObj.pageSizeFiled}`]: pageObj[`${pageObj.pageSizeFiled}`]};
+  const pageInfo = {[`${pageObj.currentField}`]: pageObj[`${pageObj.currentField}`], [`${pageObj.pageSizeField}`]: pageObj[`${pageObj.pageSizeField}`]};
 
   const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -108,7 +108,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   const pageChangeHandle = (currentPage: number, pageSize: number | undefined) => {
     const total = props.tableList ? props.tableList[`${page}_total`] : 0;
     if (pageSize && total > pageSize) {
-      setSearchInfo({ ...searchInfo, ...{ [`${pageObj.currentFiled}`]: currentPage, [`${pageObj.pageSizeFiled}`]: pageSize } });
+      setSearchInfo({ ...searchInfo, ...{ [`${pageObj.currentField}`]: currentPage, [`${pageObj.pageSizeField}`]: pageSize } });
     }
   };
 

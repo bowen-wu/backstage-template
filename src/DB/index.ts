@@ -8,8 +8,8 @@ const lastDayStr = getDayStr(-1);
 const isDefault = true;
 
 const pageObj = {
-  currentFiled: 'pageIndex',
-  pageSizeFiled: 'pageSize',
+  currentField: 'pageIndex',
+  pageSizeField: 'pageSize',
   pageIndex: 1,
   pageSize: 10,
 };
@@ -94,7 +94,7 @@ export default {
           type: 'rangePicker',
           label: '选择创建日期',
           key: 'order_create_time',
-          pickerFiledList: ['auditTimeStart', 'auditTimeEnd'],
+          pickerFieldList: ['auditTimeStart', 'auditTimeEnd'],
           default: [lastDayStr, lastDayStr],
         },
         {
@@ -256,7 +256,7 @@ export default {
           type: 'rangePicker',
           label: '审核时间',
           key: 'date',
-          pickerFiledList: ['auditTimeStart', 'auditTimeEnd'],
+          pickerFieldList: ['auditTimeStart', 'auditTimeEnd'],
         },
         {
           type: 'input',
@@ -737,7 +737,7 @@ export default {
           type: 'rangePicker',
           label: '创建时间',
           key: 'date',
-          pickerFiledList: ['auditTimeStart', 'auditTimeEnd'],
+          pickerFieldList: ['auditTimeStart', 'auditTimeEnd'],
         },
       ],
       searchActions: [

@@ -38,7 +38,7 @@ interface SearchItemInterface {
   default?: string | Array<string>;
   extra?: string;
   disabledDate?: SearchItemDisabledDateInterface;
-  pickerFiledList?: Array<string>;
+  pickerFieldList?: Array<string>;
 }
 
 export default (props: SearchPropsInterface) => {
@@ -66,13 +66,13 @@ export default (props: SearchPropsInterface) => {
         }
         return ['', ''];
       })();
-      if(searchItem.type === 'rangePicker' && (!searchItem.pickerFiledList || searchItem.pickerFiledList.length !== 2)) {
-        throw new Error('pickerFiledList 字段必须提供！');
+      if(searchItem.type === 'rangePicker' && (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2)) {
+        throw new Error('pickerFieldList 字段必须提供！');
       }
       Object.assign(
         searchInfoCopy,
         searchItem.type === 'rangePicker'
-          ? { [`${(searchItem.pickerFiledList as Array<string>)[0]}`]: defaultValue[0], [`${(searchItem.pickerFiledList as Array<string>)[1]}`]: defaultValue[1] }
+          ? { [`${(searchItem.pickerFieldList as Array<string>)[0]}`]: defaultValue[0], [`${(searchItem.pickerFieldList as Array<string>)[1]}`]: defaultValue[1] }
           : { [`${searchItem.key}`]: '' },
       );
     });
@@ -120,19 +120,19 @@ export default (props: SearchPropsInterface) => {
       }
       case 'rangePicker': {
         const { placeholder = '请选择' } = searchItem;
-        if(!searchItem.pickerFiledList || searchItem.pickerFiledList.length !== 2) {
-          throw new Error('pickerFiledList 字段必须提供！');
+        if(!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2) {
+          throw new Error('pickerFieldList 字段必须提供！');
         }
-        const pickerFirstFiled = searchItem.pickerFiledList[0];
-        const pickerSecondFiled = searchItem.pickerFiledList[1];
+        const pickerFirstField = searchItem.pickerFieldList[0];
+        const pickerSecondField = searchItem.pickerFieldList[1];
         return (
           <RangePicker
-            value={searchInfo[pickerFirstFiled] && searchInfo[pickerSecondFiled] ? [moment(searchInfo[pickerFirstFiled], rangePickerDateFormat), moment(searchInfo[pickerSecondFiled], monthPickerDateFormat)] : []}
+            value={searchInfo[pickerFirstField] && searchInfo[pickerSecondField] ? [moment(searchInfo[pickerFirstFiled], rangePickerDateFormat), moment(searchInfo[pickerSecondFiled], monthPickerDateFormat)] : []}
             style={{ flex: 1 }}
             allowClear={false}
             placeholder={[placeholder, placeholder]}
             onChange={(date, dateStringArr) =>
-              updateSearchInfo({ [`${pickerFirstFiled}`]: dateStringArr[0], [`${pickerSecondFiled}`]: dateStringArr[1] })
+              updateSearchInfo({ [`${pickerFirstField}`]: dateStringArr[0], [`${pickerSecondField}`]: dateStringArr[1] })
             }
           />
         );
