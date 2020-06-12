@@ -75,6 +75,7 @@ export default (props: SearchPropsInterface) => {
           ? { [`${(searchItem.pickerFieldList as Array<string>)[0]}`]: defaultValue[0], [`${(searchItem.pickerFieldList as Array<string>)[1]}`]: defaultValue[1] }
           : { [`${searchItem.key}`]: '' },
       );
+      return null;
     });
     setSearchInfo(searchInfoCopy);
   }, [searchList]);
@@ -85,7 +86,9 @@ export default (props: SearchPropsInterface) => {
     if(action.key === 'reset') {
       setSearchInfo({});
     }
-    props.actionsHandle && props.actionsHandle(action, action.key === 'reset' ? {} : searchInfo);
+    if(props.actionsHandle) {
+      props.actionsHandle(action, action.key === 'reset' ? {} : searchInfo);
+    }
   };
 
   const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
@@ -127,7 +130,7 @@ export default (props: SearchPropsInterface) => {
         const pickerSecondField = searchItem.pickerFieldList[1];
         return (
           <RangePicker
-            value={searchInfo[pickerFirstField] && searchInfo[pickerSecondField] ? [moment(searchInfo[pickerFirstFiled], rangePickerDateFormat), moment(searchInfo[pickerSecondFiled], monthPickerDateFormat)] : []}
+            value={searchInfo[pickerFirstField] && searchInfo[pickerSecondField] ? [moment(searchInfo[pickerFirstField], rangePickerDateFormat), moment(searchInfo[pickerSecondField], monthPickerDateFormat)] : []}
             style={{ flex: 1 }}
             allowClear={false}
             placeholder={[placeholder, placeholder]}
