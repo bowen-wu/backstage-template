@@ -246,6 +246,7 @@ export default {
     requestMethod: MethodEnum.POST,
     requestUrl: '/queue/history/list',
     searchInfo: {
+      externalProcessingActionKeyList: ['reset'],
       spanItem: {
         select: 6,
         input: 6,

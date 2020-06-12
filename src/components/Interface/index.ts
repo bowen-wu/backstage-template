@@ -241,7 +241,7 @@ export interface PageBasicPropsInterface {
   hasSearchForm?: boolean;
   extraSearchInfo?: object;
   actionsHandle?: (action: ActionInterface, record: any) => void;
-  searchActionsHandle?: (action: ActionInterface) => void;
+  searchActionsHandle?: (action: ActionInterface, callback: (searchInfo: PageSearchInfoInterface) => void) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   refresh?: Boolean;
   dispatch: Dispatch;

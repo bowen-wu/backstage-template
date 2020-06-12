@@ -49,7 +49,7 @@ yarn lint:fix
     | page | 页面唯一标识，同时对应着 `DB/index.ts` 中的相关配置 | string | - | true |
     | hasSearchForm | 是否含有 `searchForm` | boolean | false | false |
     | extraSearchInfo | 在搜索时会带上 `extraSearchInfo` 中的字段 | object | - | false |
-    | searchActionsHandle | 搜索后的回调函数 | (action: ActionInterface) => void | - | false |
+    | searchActionsHandle | 搜索后的回调函数 | (action: ActionInterface, callback: (searchInfo: PageSearchInfoInterface) => void) => void | - | false |
     | actionsHandle | 表格中 action 操作的回调函数 | (action: ActionInterface, record: any) => void | - | false |
     | refresh | 值更改了之后，则会强制刷新 `table` | boolean | - | false |
     | onRowSelectionChange | table 中表格行选中项发生变化时的回调 | (selectedRows: Array<ObjectInterface>) => void | - | false |
@@ -283,3 +283,7 @@ yarn lint:fix
     | listRelatedFields | 后台接口返回的包装的字段 | string | - | true |
     | labelField | 返回的数据的 label 的字段 | string | - | true |
     | valueField | 返回的数据的 value 的字段 | string | - | true |
+
+
+### 注意点
+- model 中的 ` namespace ` 和 ` connect.d.ts ` 文件中的 ` ConnectState ` interface 需要保持一致

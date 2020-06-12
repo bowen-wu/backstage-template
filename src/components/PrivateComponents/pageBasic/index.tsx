@@ -52,7 +52,13 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   const searchActionsHandle = (action: ActionInterface, searchInformation: object) => {
     if (externalProcessingActionKeyList.indexOf(action.key) >= 0) {
       if (props.searchActionsHandle) {
-        props.searchActionsHandle(action);
+        props.searchActionsHandle(action, (userSearchInfo: PageSearchInfoInterface) => {
+          if(userSearchInfo[`${pageObj.pageSizeField}`] && userSearchInfo[`${pageObj.currentField}`]) {
+            setSearchInfo(userSearchInfo);
+          } else {
+            throw new Error(`reset 时需要给最基本的 page 相关字段，${pageObj.pageSizeField} 和 ${pageObj.currentField}！`);
+          }
+        });
       }
       return;
     }
