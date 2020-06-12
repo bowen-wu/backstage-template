@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Input, Row, Col, Button, DatePicker } from 'antd';
+import { Select, Input, Row, Col, Button, DatePicker, Cascader } from 'antd';
+import { connect } from 'dva';
 import moment from 'moment';
 import DB from '../../../DB/index';
-import { SearchPropsInterface, SearchActionInterface } from '../../Interface';
+import {SearchPropsInterface, SearchActionInterface, SearchItemControlType, MethodEnum} from '../../Interface';
 import styles from './index.less';
+import {ObjectInterface} from "@/components/Interface";
+import {ConnectState} from "@/models/connect";
 
 const basicSpanItem = {
   input: 4,
@@ -28,34 +31,59 @@ interface SearchItemDisabledDateInterface {
   (current: any): boolean;
 }
 
+export interface OptionInterface {
+  label: string;
+  value: string;
+}
+
+interface OptionRequestParamsInterface {
+  url: string,
+  method: MethodEnum,
+  listRelatedFields: string,
+  labelField: string,
+  valueField: string,
+}
+
 interface SearchItemInterface {
   key: string;
   type: string;
   label: string;
   placeholder?: string;
   optionList?: Array<SearchItemOptionInterface>;
-  optionRequestUrl?: string;
+  optionRequestParams?: OptionRequestParamsInterface,
   default?: string | Array<string>;
   extra?: string;
   disabledDate?: SearchItemDisabledDateInterface;
   pickerFieldList?: Array<string>;
 }
 
-export default (props: SearchPropsInterface) => {
-  const { page } = props;
-  const {
-    searchInfo: { searchList, searchActions, spanItem: userSpanItem },
-  } = DB[page];
+const SearchForm = (props: SearchPropsInterface) => {
+  const { page, dispatch, searchForm } = props;
+  const {searchInfo: { searchList, searchActions, spanItem: userSpanItem }} = DB[page];
   const [searchInfo, setSearchInfo] = useState<object>({});
   const spanItem = Object.assign({}, basicSpanItem, userSpanItem);
-
-  // TODO: select 后台获取
+  const [cascaderOption, setCascaderOption] = useState<Array<ObjectInterface>>([]);
 
   useEffect(() => {
+    const getSelectOptions = async () => {
+      const selectList = searchList.filter((searchItem: SearchItemInterface) => searchItem.type === SearchItemControlType.Select && searchItem.optionRequestParams && Object.keys(searchItem.optionRequestParams).length);
+      if(selectList.length) {
+        await Promise.all(selectList.map((searchItem: SearchItemInterface) => {
+          const {optionRequestParams, key} = searchItem;
+          const {url: requestUrl, method, listRelatedFields: relatedFields, valueField, labelField} = (optionRequestParams as OptionRequestParamsInterface);
+          return dispatch({
+            type: 'searchForm/getOptionList',
+            payload: {requestUrl, method, relatedFields, key, valueField, labelField},
+          })
+        }));
+      }
+    };
+    getSelectOptions();
+
     const searchInfoCopy = {};
     searchList.map((searchItem: SearchItemInterface) => {
       const defaultValue: any = (() => {
-        if (searchItem.type === 'rangePicker' && searchItem.default) {
+        if (searchItem.type === SearchItemControlType.RangePicker && searchItem.default) {
           if (searchItem.default instanceof Array && searchItem.default.length === 2) {
             return [
               moment(searchItem.default[0], rangePickerDateFormat),
@@ -66,12 +94,12 @@ export default (props: SearchPropsInterface) => {
         }
         return ['', ''];
       })();
-      if(searchItem.type === 'rangePicker' && (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2)) {
+      if(searchItem.type === SearchItemControlType.RangePicker && (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2)) {
         throw new Error('pickerFieldList 字段必须提供！');
       }
       Object.assign(
         searchInfoCopy,
-        searchItem.type === 'rangePicker'
+        searchItem.type === SearchItemControlType.RangePicker
           ? { [`${(searchItem.pickerFieldList as Array<string>)[0]}`]: defaultValue[0], [`${(searchItem.pickerFieldList as Array<string>)[1]}`]: defaultValue[1] }
           : { [`${searchItem.key}`]: '' },
       );
@@ -93,9 +121,20 @@ export default (props: SearchPropsInterface) => {
 
   const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
 
+  // TODO: cascader 相关逻辑
+  const cascaderLoadData = (selectedOptions: any) => {
+    console.log('selectedOptions -> ', selectedOptions);
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+  };
+
+  const cascaderOnChange = (value: any, selectedOptions: any) => {
+    console.log(value, selectedOptions);
+  };
+
   const searchTypeEle = (searchItem: SearchItemInterface) => {
     switch (searchItem.type) {
-      case 'input':
+      case SearchItemControlType.Input:
         return (
           <Input
             value={searchInfo[searchItem.key]}
@@ -103,8 +142,16 @@ export default (props: SearchPropsInterface) => {
             onChange={e => handleChange(e.target.value, searchItem.key)}
           />
         );
-      case 'select': {
-        const optionList = searchItem.optionList instanceof Array ? searchItem.optionList : [];
+      case SearchItemControlType.Select: {
+        const optionList = (() => {
+          if(searchForm[`${searchItem.key}_option_list`]) {
+            return searchForm[`${searchItem.key}_option_list`];
+          }
+          if(searchItem.optionList instanceof Array) {
+            return searchItem.optionList
+          }
+          return [];
+        })();
         const defaultArray = optionList.filter(
           (option: SearchItemOptionInterface) => option.isDefault && option,
         );
@@ -115,13 +162,13 @@ export default (props: SearchPropsInterface) => {
             style={{ flex: 1 }}
             onChange={(value: string) => handleChange(value, searchItem.key)}
           >
-            {optionList.map(option => (
+            {optionList.map((option: OptionInterface) => (
               <Option key={option.value}>{option.label}</Option>
             ))}
           </Select>
         );
       }
-      case 'rangePicker': {
+      case SearchItemControlType.RangePicker: {
         const { placeholder = '请选择' } = searchItem;
         if(!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2) {
           throw new Error('pickerFieldList 字段必须提供！');
@@ -140,13 +187,22 @@ export default (props: SearchPropsInterface) => {
           />
         );
       }
-      case 'monthPicker':
+      case SearchItemControlType.MonthPicker:
         return (
           <MonthPicker
             value={moment(searchItem.default, monthPickerDateFormat) || ''}
             style={{ flex: 1 }}
             disabledDate={searchItem.disabledDate}
             placeholder={searchItem.placeholder || '请选择'}
+          />
+        );
+      case SearchItemControlType.Cascader:
+        return (
+          <Cascader
+            options={cascaderOption}
+            loadData={cascaderLoadData}
+            onChange={cascaderOnChange}
+            changeOnSelect
           />
         );
       default:
@@ -187,3 +243,5 @@ export default (props: SearchPropsInterface) => {
     </div>
   );
 };
+
+export default connect(({ searchForm }: ConnectState) => ({ searchForm }))(SearchForm);

@@ -165,8 +165,8 @@ yarn lint:fix
     | label | search item label 标签的文本 | string | '' | false |
     | key | React 需要的 key，不能有相同的 | string | - | true |
     | placeholder | 控件的占位文本 | string | '' | false |
-    | optionRequestUrl | 当 `type === SearchItemControlType.Select` 时设置才生效。获取选项列表请求的 url, 当 `optionRequestUrl` 和 `optionList` 同时存在时，以 `optionRequestUrl` 为主 | string | - | false |
-    | optionList | 当 `type === SearchItemControlType.Select` 时设置才生效。选项列表 | Array | - | false |
+    | optionRequestParams | 当 `type === SearchItemControlType.Select` 时设置才生效。请求 optionList 的相关字段 | OptionRequestParamsInterface | - | false |
+    | optionList | 当 `type === SearchItemControlType.Select` 时设置才生效。选项列表 | Array<OptionInterface> | - | false |
     | default | 默认值 | 由控件类型决定，`string | Array<string>` | - | false |
     | disabledDate | 当控件类型为 `SearchItemControlType.MonthPicker` 时才生效。不可选择的日期 | (currentDate: moment) => boolean | - | false |
     | extra | 控件后面需要补充的文字 | string | - | false |
@@ -266,3 +266,20 @@ yarn lint:fix
     | currentField |       currentPage 字段名称     | string |     -      |  true   |
     | [`${pageSizeField}`] | pageSize 字段 | number | - | true |
     | [`${currentField}`] | currentPage 字段 | number | - | true |
+    
+    ` OptionInterface ` 字段说明
+    
+    | 参数  |               说明               |  类型   |   默认值   | required |
+    | :---: | :------------------------------: | :-----: | :--------: | :------: |
+    | label  | label | string  | - |   true  |
+    | value |      value     | string |     -      |  true   |
+    
+    ` OptionRequestParamsInterface ` 字段说明
+    
+    | 参数  |               说明               |  类型   |   默认值   | required |
+    | :---: | :------------------------------: | :-----: | :--------: | :------: |
+    | url  | 请求的 url  | string  | - |   true  |
+    | method |     请求的 method    | MethodEnum |     MethodEnum.GET      |  true   |
+    | listRelatedFields | 后台接口返回的包装的字段 | string | - | true |
+    | labelField | 返回的数据的 label 的字段 | string | - | true |
+    | valueField | 返回的数据的 value 的字段 | string | - | true |

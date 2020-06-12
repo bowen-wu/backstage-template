@@ -1,9 +1,6 @@
 import request from '@/utils/request';
-import {ObjectInterface} from "@/components/Interface";
+import {MethodEnum, ObjectInterface} from '@/components/Interface';
 
-export async function getOptionListInfo(url: string, method: string, params: ObjectInterface) {
-  return request(url, {
-    method,
-    params,
-  });
+export async function getOptionListInfo(url: string, method: MethodEnum, params: ObjectInterface) {
+  return request(url, Object.assign({method}, method === MethodEnum.POST ? {data: params} : {params}));
 }

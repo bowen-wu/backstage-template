@@ -21,6 +21,7 @@ export enum SearchItemControlType {
   Select = 'select',
   RangePicker = 'rangePicker',
   MonthPicker = 'monthPicker',
+  Cascader = 'cascader',
 }
 
 export enum ExchangeStatusParamsPositionEnum {
@@ -100,7 +101,9 @@ export interface TablePropsInterface extends PropsInterface {
 }
 
 export interface SearchPropsInterface extends PropsInterface {
+  dispatch: Dispatch<AnyAction>;
   actionsHandle?: (action: SearchActionInterface, searchInfo: object, record?: any) => void;
+  searchForm: SearchFormModelState,
 }
 
 export interface LoginParamsType {
@@ -156,8 +159,7 @@ export interface TableListModelState {
 }
 
 export interface SearchFormModelState {
-  // TODO: 需要增加 list
-  //    manage_user_list?: Array<any>;
+  [propsName: string]: Array<any>
 }
 
 export interface UserModelType {
