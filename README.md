@@ -179,6 +179,10 @@ yarn lint:fix
     | key  | React 需要的 key，不能有相同的 |   string   |   -    |   true   |
     | text |          action 文案           |   string   |   -    |   true   |
     | type |       action Button type       | ButtonType |   -    |   true   |
+    
+    ```
+    注意：如果 searchForm 中的 action 的 key === 'reset'，那么 pageBasic 会有 reset 功能，但是如果在 externalProcessingActionKeyList 这个字段有 reset，会拦截 pageBasic 的 reset 事件
+    ```
 
     `columnList<Object>` 字段说明
 
