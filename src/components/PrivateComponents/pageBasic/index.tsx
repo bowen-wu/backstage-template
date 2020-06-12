@@ -68,8 +68,8 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       setSearchInfo({...pageInfo});
     } else {
       setSearchInfo({
-        ...getValidSearchInfo(searchInformation),
         ...searchInfo,
+        ...getValidSearchInfo(searchInformation),
       });
     }
   };

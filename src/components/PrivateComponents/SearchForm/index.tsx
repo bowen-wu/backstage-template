@@ -125,7 +125,6 @@ const SearchForm = (props: SearchPropsInterface) => {
 
   // TODO: cascader 相关逻辑
   const cascaderLoadData = (selectedOptions: any) => {
-    console.log('selectedOptions -> ', selectedOptions);
     const targetOption = selectedOptions[selectedOptions.length - 1];
     targetOption.loading = true;
   };
