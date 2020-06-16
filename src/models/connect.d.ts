@@ -11,6 +11,7 @@ import {
   SearchFormModelState,
 } from '@/components/Interface';
 import { AuditQueueState } from './auditQueue';
+import { WorkingScheduleState } from './workingSchedule';
 
 export { GlobalModelState, SettingModelState, UserModelState };
 
@@ -35,6 +36,9 @@ export interface ConnectState {
   tableList: TableListModelState;
   searchForm: SearchFormModelState,
   details: DetailsModelState;
+  auditQueueState: AuditQueueState;
+  workingScheduleState: WorkingScheduleState;
+  history: HistoryModelState;
 }
 
 export interface Route extends MenuDataItem {

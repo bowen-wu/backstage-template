@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import { connect } from 'dva';
+import {CascaderOptionType} from 'antd/lib/cascader';
 import TableBasic from '@/components/PrivateComponents/TableBasic';
 import SearchForm from '@/components/PrivateComponents/SearchForm';
 import {
@@ -74,6 +75,12 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     }
   };
 
+  const cascaderLoadData = async (selectedOptions: CascaderOptionType[] | undefined) => {
+    if(selectedOptions && props.cascaderLoadData) {
+      await props.cascaderLoadData(selectedOptions);
+    }
+  };
+
   const tableActionsHandle = async (action: TableActionInterface, record: any) => {
     try {
       // TODO: 各个 table 的 action 操作
@@ -125,7 +132,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
 
   return (
     <Spin spinning={loading} size="large">
-      {hasSearchForm ? <SearchForm page={page} actionsHandle={searchActionsHandle} /> : null}
+      {hasSearchForm ? <SearchForm page={page} actionsHandle={searchActionsHandle} cascaderLoadData={cascaderLoadData} cascaderOption={props.cascaderOption} /> : null}
       <TableBasic
         page={page}
         dataSource={props.tableList ? props.tableList[`${page}_list`] : []}

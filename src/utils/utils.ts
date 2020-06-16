@@ -84,7 +84,7 @@ export const getLastMonthStr = (connector = '-') => {
 
 export const getValidSearchInfo = (searchInfo: object) => {
   Object.keys(searchInfo).forEach((key: string) => {
-    if (!searchInfo[key]) {
+    if (searchInfo[key] === '') {
       delete searchInfo[key];
     }
   });

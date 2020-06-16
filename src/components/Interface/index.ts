@@ -1,5 +1,6 @@
 import { Effect } from 'dva';
 import { Dispatch, AnyAction, Reducer } from 'redux';
+import {CascaderOptionType} from 'antd/lib/cascader';
 import { MenuDataItem, BasicLayoutProps as ProLayoutProps } from '@ant-design/pro-layout';
 
 export enum ButtonType {
@@ -103,7 +104,9 @@ export interface TablePropsInterface extends PropsInterface {
 export interface SearchPropsInterface extends PropsInterface {
   dispatch: Dispatch<AnyAction>;
   actionsHandle?: (action: SearchActionInterface, searchInfo: object, record?: any) => void;
-  searchForm: SearchFormModelState,
+  searchForm: SearchFormModelState;
+  cascaderOption?: CascaderOptionType[];
+  cascaderLoadData?: (selectedOptions: CascaderOptionType[]) => void;
 }
 
 export interface LoginParamsType {
@@ -245,6 +248,8 @@ export interface PageBasicPropsInterface {
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   refresh?: Boolean;
   dispatch: Dispatch;
+  cascaderOption?: CascaderOptionType[];
+  cascaderLoadData?: (selectedOptions: CascaderOptionType[]) => void;
 }
 
 export interface TableColumnInterface {

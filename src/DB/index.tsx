@@ -1,6 +1,5 @@
 // searchItem 的 type === rangePicker 时，default 必须是数组，且 length === 2
 
-import React from 'react';
 import moment from 'moment';
 import { getDayStr, getLastMonthStr } from '@/utils/utils';
 import {MethodEnum} from "@/components/Interface";
@@ -357,40 +356,10 @@ export default () => ({
           ],
         },
         {
-          type: 'select',
-          label: '信审审核状态',
+          type: 'cascader',
+          label: '测试级联选择器',
           key: 'userInfo9',
-          optionList: [
-            {
-              isDefault,
-              value: '1',
-              label: '默认',
-            },
-            {
-              value: '2',
-              label: '通过',
-            },
-            {
-              value: '3',
-              label: '取消',
-            },
-            {
-              value: '4',
-              label: '拒绝',
-            },
-          ],
-        },
-        {
-          type: 'select',
-          label: '审核结果一级原因',
-          key: 'userInfo10',
-          optionList: [],
-        },
-        {
-          type: 'select',
-          label: '审核结果二级原因',
-          key: 'userInfo11',
-          optionList: [],
+          cascaderFieldList: ['test1', 'test2', 'test3'],
         },
       ],
       searchActions: [
