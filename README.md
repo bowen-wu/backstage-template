@@ -53,6 +53,9 @@ yarn lint:fix
     | actionsHandle | 表格中 action 操作的回调函数 | (action: ActionInterface, record: any) => void | - | false |
     | refresh | 值更改了之后，则会强制刷新 `table` | boolean | - | false |
     | onRowSelectionChange | table 中表格行选中项发生变化时的回调 | (selectedRows: Array<ObjectInterface>) => void | - | false |
+    | cascaderOption | 级联选择器数据 | CascaderOptionType[] | - | false |
+    | cascaderLoadData | 级联选择器 loadData 方法 | (selectedOptions: CascaderOptionType[]) => void | - | false |
+    
 
         <!--
             TODO: 这两个参数需要更新
@@ -171,6 +174,7 @@ yarn lint:fix
     | disabledDate | 当控件类型为 `SearchItemControlType.MonthPicker` 时才生效。不可选择的日期 | (currentDate: moment) => boolean | - | false |
     | extra | 控件后面需要补充的文字 | string | - | false |
     | pickerFieldList | 当 `type === SearchItemControlType.rangePicker` 时必须设置，为 rangePicker 的字段名称 | Array<string> length === 2 | - | false |
+    | cascaderFieldList | 当 `type === SearchItemControlType.Cascader` 时必须设置，为 cascader 的字段名称 | Array<string> | - | false |
 
     `searchActions<Object>` 字段说明
 
