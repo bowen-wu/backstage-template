@@ -13,14 +13,10 @@ const initState = {
   userPermissionsMenu: [{path: ''}],
 };
 
-const hideInMenuPathList = [
-  '/manage_user/detail',
-];
+const hideInMenuPathList = [''];
 
-// TODO: delete childList 属性
 const userPermissionsMenu = (menuList: MenuDataItem[]): MenuDataItem[] => menuList.map(item => ({
   ...item,
-  children: item.childList ? userPermissionsMenu(item.childList) : [],
   hideInMenu: hideInMenuPathList.indexOf(<string>item.path) >= 0,
 }));
 
