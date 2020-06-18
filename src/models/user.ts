@@ -1,10 +1,6 @@
-import { MenuDataItem } from '@ant-design/pro-layout';
-import { stringify } from 'querystring';
-import router from 'umi/router';
-import { accountLogin, getUserPermissionsMenu, accountLogout } from '@/services/user';
-import { getPageQuery } from '@/utils/utils';
-import { setAuthority } from '@/utils/authority';
-import { UserModelType } from '@/components/Interface';
+import {MenuDataItem} from '@ant-design/pro-layout';
+import {getUserPermissionsMenu, getUserInfo} from '@/services/user';
+import {UserModelType} from '@/components/Interface';
 
 const initState = {
   currentUser: {
@@ -14,7 +10,7 @@ const initState = {
     id: '',
   },
   status: {},
-  userPermissionsMenu: [{ path: '' }],
+  userPermissionsMenu: [{path: ''}],
 };
 
 const hideInMenuPathList = [
@@ -23,10 +19,10 @@ const hideInMenuPathList = [
 
 // TODO: delete childList 属性
 const userPermissionsMenu = (menuList: MenuDataItem[]): MenuDataItem[] => menuList.map(item => ({
-    ...item,
-    children: item.childList ? userPermissionsMenu(item.childList) : [],
-    hideInMenu: hideInMenuPathList.indexOf(<string>item.path) >= 0,
-  }));
+  ...item,
+  children: item.childList ? userPermissionsMenu(item.childList) : [],
+  hideInMenu: hideInMenuPathList.indexOf(<string>item.path) >= 0,
+}));
 
 const hasRoutePermissions = (
   allRoutesWithPermissions: MenuDataItem[],
@@ -55,88 +51,22 @@ const UserModel: UserModelType = {
    put：发出一个 Action，类似于 dispatch
    */
   effects: {
-    // login
-    *login({ payload }, { call, put }) {
-      const response = yield call(accountLogin, payload);
-      // TODO: 使用 Login successfully 逻辑
-      window.location.href = '/';
-      return ;
-
-      yield put({
-        type: 'changeLoginStatus',
-        payload: { ...response, status: response.code === 0 ? 'ok' : 'error' },
-      });
-
-      // Login successfully
-      if (response.code === 0) {
-        const { token: adminToken, userName: adminUserId } = response.result;
-        if (window.localStorage.getItem('tokenExpired')) {
-          window.localStorage.removeItem('tokenExpired');
-        }
-        window.localStorage.setItem('adminToken', adminToken);
-        window.localStorage.setItem('adminUserId', adminUserId);
-        const userPermissionsMenuResponse = yield call(getUserPermissionsMenu, {
-          userId: response.result.id,
-        });
-        yield put({ type: 'saveCurrentUser', payload: response.result });
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        let { redirect } = params as { redirect: string };
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (
-            redirectUrlParams.origin === urlParams.origin &&
-            hasRoutePermissions(userPermissionsMenuResponse.result, redirectUrlParams.pathname)
-          ) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
-          } else {
-            window.location.href = '/';
-            return;
-          }
-        }
-        router.replace(redirect || '/');
+    * getUserInfo(_, {call, put}) {
+      const response = yield call(getUserInfo);
+      console.log('response -> ', JSON.parse(response.result));
+      if (response.code === '0') {
+        const token = window.localStorage.getItem('token') || '';
+        yield put({type: 'saveCurrentUser', payload: {...JSON.parse(response.result), token}});
       }
     },
-
-    *getUserPermissionsMenu({ payload }, { call, put }) {
+    * getUserPermissionsMenu({payload}, {call, put}) {
       const response = yield call(getUserPermissionsMenu, payload);
-      yield put({ type: 'saveUserPermissionsMenu', payload: userPermissionsMenu(response.result) });
-    },
-
-    *logout(_, { call, put }) {
-      const response = yield call(accountLogout);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: { ...response, status: response.code === 0 ? 'ok' : 'error' },
-      });
-      window.localStorage.clear();
-      const { redirect } = getPageQuery();
-      // Note: There may be security issues, please note
-      if (window.location.pathname !== '/user/login' && !redirect) {
-        router.replace({
-          pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
-        });
-      }
+      yield put({type: 'saveUserPermissionsMenu', payload: userPermissionsMenu(response.result.menus)});
     },
   },
 
   // Action 处理器，处理同步动作，用来算出最新的 State
   reducers: {
-    changeLoginStatus(state, { payload }) {
-      window.localStorage.setItem('currentUser', JSON.stringify(payload.result || {}));
-      setAuthority(payload.result ? payload.result.userName : '');
-      return {
-        ...state,
-        status: payload.status,
-        type: payload.type,
-      };
-    },
     saveCurrentUser(state = initState, action) {
       return {
         ...state,
@@ -144,11 +74,9 @@ const UserModel: UserModelType = {
       };
     },
     saveUserPermissionsMenu(state = initState, action) {
-      // TODO: 保存 action.payload
       return {
         ...state,
-        // userPermissionsMenu: action.payload || [],
-        userPermissionsMenu: [],
+        userPermissionsMenu: action.payload || [],
       };
     },
   },

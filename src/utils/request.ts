@@ -51,7 +51,7 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 基础参数
  */
-const baseUrl = 'http://192.168.7.10:8081';
+const baseUrl = 'http://192.168.203.176:8081';
 const basePrefix = '/audit-manager';
 
 /**
@@ -70,7 +70,7 @@ request.interceptors.request.use((url, options) => ({
   options: {
     ...options,
     headers: {
-      token: window.localStorage.getItem('token') || '',
+      Authorization: window.localStorage.getItem('token') || '',
     },
   },
 }));

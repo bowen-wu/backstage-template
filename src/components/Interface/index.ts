@@ -169,13 +169,11 @@ export interface UserModelType {
   namespace: 'user';
   state: UserModelState;
   effects: {
-    login: Effect;
-    logout: Effect;
     getUserPermissionsMenu: Effect;
+    getUserInfo: Effect;
   };
   reducers: {
     saveCurrentUser: Reducer<UserModelState>;
-    changeLoginStatus: Reducer<StateType>;
     saveUserPermissionsMenu: Reducer<UserModelState>;
   };
   subscriptions?: object;

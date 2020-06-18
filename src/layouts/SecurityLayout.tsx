@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'dva';
 import { PageLoading } from '@ant-design/pro-layout';
-import { Redirect } from 'umi';
-import { stringify } from 'querystring';
 import { ConnectState, ConnectProps } from '@/models/connect';
-import { CurrentUser } from '@/components/Interface';
+import {CurrentUser} from '@/components/Interface';
+const queryString = require('query-string');
 
 interface SecurityLayoutProps extends ConnectProps {
   loading?: boolean;
@@ -21,18 +20,15 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
   };
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    window.localStorage.setItem('token', queryString.parse(window.location.search).token);
+
     this.setState({
       isReady: true,
     });
-    const currentUser = JSON.parse(
-      window.localStorage.getItem('currentUser') || JSON.stringify({}),
-    );
-    const { dispatch } = this.props;
+
     if (dispatch) {
-      dispatch({
-        type: 'user/saveCurrentUser',
-        payload: currentUser,
-      });
+      dispatch({type: 'user/getUserInfo'});
     }
   }
 
@@ -41,18 +37,14 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     const { children, loading, currentUser } = this.props;
     // todo -> 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）,
     console.log('currentUser -> ', currentUser);
-    const isLogin = currentUser && currentUser.token && true;
-    const queryString = stringify({
-      redirect: window.location.href,
-    });
+    const isLogin = currentUser && currentUser.token;
 
     if ((!isLogin && loading) || !isReady) {
       return <PageLoading />;
     }
 
-    // TODO: delete && false
-    if (!isLogin && false) {
-      return <Redirect to={`/user/login?${queryString}`} />;
+    if (!isLogin) {
+      window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
     }
     return children;
   }

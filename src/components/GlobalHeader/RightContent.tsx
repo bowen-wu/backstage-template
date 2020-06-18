@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch'; // import SelectLang from '../SelectLang';
 
 import styles from './index.less';
@@ -24,9 +23,9 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
     <div className={className}>
       <HeaderSearch
         className={`${styles.action} ${styles.search}`}
-        placeholder="站内搜索"
-        defaultValue="umi ui"
-        dataSource={['搜索提示一', '搜索提示二', '搜索提示三']}
+        placeholder="搜索"
+        defaultValue=""
+        dataSource={[]}
         onSearch={value => {
           console.log('input', value);
         }}
@@ -34,10 +33,6 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
           console.log('enter', value);
         }}
       />
-      <Avatar />
-
-      {/* 语言切换 */}
-      {/* <SelectLang className={styles.action} /> */}
     </div>
   );
 };

@@ -15,7 +15,6 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
-import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.png';
@@ -26,9 +25,7 @@ const noMatch = (
     title="403"
     subTitle="Sorry, you are not authorized to access this page."
     extra={
-      <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
-      </Button>
+      <Button type="primary" onClick={() => window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F'}>Go Login</Button>
     }
   />
 );
@@ -56,18 +53,11 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     children,
     settings,
     location = { pathname: '/' },
-    user: {
-      userPermissionsMenu,
-      currentUser: { id: userId },
-    },
+    user: {userPermissionsMenu,},
   } = props;
 
   useEffect(() => {
-    // TODO: 获取用户的有权限的菜单
-    // dispatch({
-    //   type: 'user/getUserPermissionsMenu',
-    //   payload: { userId },
-    // });
+    dispatch({type: 'user/getUserPermissionsMenu'});
   }, []);
 
   const handleMenuCollapse = (payload: boolean): void => {
@@ -116,13 +106,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         );
       }}
       footerRender={() => <DefaultFooter links={false} copyright="TEMPLATE" />}
-      menuDataRender={(menuList: MenuDataItem[]): MenuDataItem[] => {
-        return menuList;
-
-        // TODO: 使用 userPermissionsMenu
-        // return userPermissionsMenu;
-      }}
-      rightContentRender={() => <RightContent />}
+      menuDataRender={() => userPermissionsMenu}
+      // TIPS: header 右侧用户 () => RightContent
+      rightContentRender={() => null}
       {...props}
       {...settings}
     >
