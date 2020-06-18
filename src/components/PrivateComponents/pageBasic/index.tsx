@@ -83,7 +83,6 @@ const PageBasic = (props: PageBasicPropsInterface) => {
 
   const tableActionsHandle = async (action: TableActionInterface, record: any) => {
     try {
-      // TODO: 各个 table 的 action 操作
       setLoading(true);
       const {
         exchangeStatusUrl,

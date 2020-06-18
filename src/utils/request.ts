@@ -4,9 +4,6 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import router from 'umi/router';
-import { stringify } from 'querystring';
-import { getPageQuery } from '@/utils/utils';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -76,26 +73,16 @@ request.interceptors.request.use((url, options) => ({
 }));
 
 request.interceptors.response.use(async response => {
-  // TODO: response interceptors
   const data = await response.clone().json();
-  if (data.code === 3 && window.localStorage.getItem('tokenExpired') !== 'expired') {
-    window.localStorage.setItem('tokenExpired', 'expired');
+  if (data.code === '1000002') {
     notification.error({
       message: `登陆过期，请重新登录！`,
-      description: data.errorMsg,
+      description: data.msg,
     });
     window.localStorage.clear();
-    const { redirect } = getPageQuery();
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      router.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: window.location.href,
-        }),
-      });
-    }
+    window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
   }
-  if (data.code === 2 || data.code === 1) {
+  if (data.code === '1') {
     notification.error({
       message: `${data.errorMsg}`,
     });
