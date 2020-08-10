@@ -7,5 +7,7 @@ module.exports = {
   rules: {
     'react/jsx-curly-newline': 0,
     'prefer-object-spread': 0,
+    quotes: ['error', 'single', { allowTemplateLiterals: true }],
+    '@typescript-eslint/quotes': ['error', 'single', { allowTemplateLiterals: true }],
   },
 };

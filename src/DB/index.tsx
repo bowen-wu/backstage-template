@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 import { getDayStr, getLastMonthStr } from '@/utils/utils';
-import {MethodEnum} from "@/components/Interface";
+import { MethodEnum } from '@/components/Interface';
 
 const lastDayStr = getDayStr(-1);
 const isDefault = true;
@@ -145,7 +145,7 @@ export default () => ({
     },
     tableInfo: {
       scroll: {
-        x: 1200
+        x: 1200,
       },
       columnList: [
         {
@@ -796,6 +796,127 @@ export default () => ({
           title: '资料补录情况',
           dataIndex: 'dataImportStatusVOList',
           key: 'dataImportStatusVOList',
+        },
+      ],
+    },
+    pageObj,
+  },
+
+  queryCoreOutsourcingHistory: {
+    requestUrl: '',
+    requestMethod: MethodEnum.POST,
+    searchInfo: {
+      spanItem: {
+        input: 6,
+      },
+      searchList: [
+        {
+          type: 'input',
+          label: 'userId',
+          key: 'userId',
+        },
+
+        {
+          type: 'input',
+          label: '联系人手机号',
+          key: 'mobile',
+        },
+        {
+          type: 'input',
+          label: '姓名',
+          key: 'name',
+        },
+      ],
+      searchActions: [
+        {
+          text: '搜 索',
+          type: 'primary',
+          key: 'search',
+        },
+      ],
+    },
+    tableInfo: {
+      scroll: {
+        x: 'max-content',
+      },
+      actionList: [
+        {
+          key: 'edit',
+          type: 'Link',
+          text: '编辑',
+        },
+      ],
+      keyList: [],
+      columnList: [
+        {
+          title: '序号',
+          dataIndex: 'userId',
+          key: 'userId',
+        },
+        {
+          title: 'APP',
+          dataIndex: 'userName',
+          key: 'userName',
+        },
+        {
+          title: '委外时账龄段',
+          dataIndex: 'finalRoute',
+          key: 'finalRoute',
+        },
+        {
+          title: '批次号',
+          dataIndex: 'userLoaningType',
+          key: 'userLoaningType',
+        },
+        {
+          title: '委案日期',
+          dataIndex: 'auditStatus',
+          key: 'auditStatus',
+        },
+        {
+          title: '结束日',
+          dataIndex: 'sysUserName',
+          key: 'sysUserName',
+        },
+        {
+          title: '催收机构',
+          dataIndex: 'applyAmount',
+          key: 'applyAmount',
+        },
+        {
+          title: 'userId',
+          dataIndex: 'createTime',
+          key: 'createTime',
+        },
+        {
+          title: '姓名',
+          dataIndex: 'waitTime',
+          key: 'waitTime',
+        },
+        {
+          title: '委案金额',
+          dataIndex: 'dataImportStatusVOList',
+          key: 'dataImportStatusVOList',
+        },
+        {
+          title: '委外时逾天数',
+          dataIndex: 'a',
+          key: 'a',
+        },
+        {
+          title: '总回款金额',
+          dataIndex: 'b',
+          key: 'b',
+        },
+        {
+          title: '最后回款时间',
+          dataIndex: 'c',
+          key: 'c',
+        },
+        {
+          title: '最后回款金额',
+          dataIndex: 'd',
+          key: 'd',
         },
       ],
     },

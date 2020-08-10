@@ -72,10 +72,10 @@ export interface TableActionInterface extends ActionInterface {
   status?: (dependValue: any) => string;
   depend?: string;
   extraInfo?: (dependValue: any) => string;
-  exchangeStatusUrl: string;
-  exchangeStatusKey: string;
+  exchangeStatusUrl?: string;
+  exchangeStatusKey?: string;
   exchangeStatusParamsPosition?: ExchangeStatusParamsPositionEnum;
-  exchangeStatusParamsKeyObj: object;
+  exchangeStatusParamsKeyObj?: object;
   exchangeStatusObj?: object;
 }
 
