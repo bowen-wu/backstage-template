@@ -1,6 +1,6 @@
-import {MenuDataItem} from '@ant-design/pro-layout';
-import {getUserPermissionsMenu, getUserInfo} from '@/services/user';
-import {UserModelType} from '@/components/Interface';
+import { MenuDataItem } from '@ant-design/pro-layout';
+import { getUserPermissionsMenu, getUserInfo } from '@/services/user';
+import { UserModelType } from '@/components/Interface';
 
 const initState = {
   currentUser: {
@@ -10,29 +10,16 @@ const initState = {
     id: '',
   },
   status: {},
-  userPermissionsMenu: [{path: ''}],
+  userPermissionsMenu: [{ path: '' }],
 };
 
 const hideInMenuPathList = [''];
 
-const userPermissionsMenu = (menuList: MenuDataItem[]): MenuDataItem[] => menuList.map(item => ({
-  ...item,
-  hideInMenu: hideInMenuPathList.indexOf(<string>item.path) >= 0,
-}));
-
-const hasRoutePermissions = (
-  allRoutesWithPermissions: MenuDataItem[],
-  readyToGoRoute: string,
-): boolean =>
-  allRoutesWithPermissions.some(route => {
-    if (route.path === readyToGoRoute) {
-      return true;
-    }
-    if (route.children) {
-      return hasRoutePermissions(route.children, readyToGoRoute);
-    }
-    return false;
-  });
+const userPermissionsMenu = (menuList: MenuDataItem[]): MenuDataItem[] =>
+  menuList.map(item => ({
+    ...item,
+    hideInMenu: hideInMenuPathList.indexOf(<string>item.path) >= 0,
+  }));
 
 const UserModel: UserModelType = {
   // reducer 在 combine 到 rootReducer 时的 key 值
@@ -47,17 +34,19 @@ const UserModel: UserModelType = {
    put：发出一个 Action，类似于 dispatch
    */
   effects: {
-    * getUserInfo(_, {call, put}) {
+    *getUserInfo(_, { call, put }) {
       const response = yield call(getUserInfo);
-      console.log('response -> ', JSON.parse(response.result));
       if (response.code === '0') {
         const token = window.localStorage.getItem('token') || '';
-        yield put({type: 'saveCurrentUser', payload: {...JSON.parse(response.result), token}});
+        yield put({ type: 'saveCurrentUser', payload: { ...JSON.parse(response.result), token } });
       }
     },
-    * getUserPermissionsMenu({payload}, {call, put}) {
+    *getUserPermissionsMenu({ payload }, { call, put }) {
       const response = yield call(getUserPermissionsMenu, payload);
-      yield put({type: 'saveUserPermissionsMenu', payload: userPermissionsMenu(response.result.menus)});
+      yield put({
+        type: 'saveUserPermissionsMenu',
+        payload: userPermissionsMenu(response.result.menus),
+      });
     },
   },
 

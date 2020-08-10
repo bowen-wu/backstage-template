@@ -53,7 +53,7 @@ const RichTextEditor = (props: RichTextEditorPropsInterface) => {
           value={editorState}
           onChange={handleEditorChange}
         />
-        {readOnly ? <div className={styles.mask}></div> : null}
+        {readOnly ? <div className={styles.mask} /> : null}
       </div>
     </Spin>
   );

@@ -1,8 +1,3 @@
-/**
- * Ant Design Pro v4 use `@ant-design/pro-layout` to handle Layout.
- * You can view component api by:
- * https://github.com/ant-design/ant-design-pro-layout
- */
 import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
@@ -15,9 +10,10 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
+import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.svg';
 
 const noMatch = (
   <Result
@@ -25,7 +21,9 @@ const noMatch = (
     title="403"
     subTitle="Sorry, you are not authorized to access this page."
     extra={
-      <Button type="primary" onClick={() => window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F'}>Go Login</Button>
+      <Button type="primary">
+        <Link to="/user/login">Go Login</Link>
+      </Button>
     }
   />
 );
@@ -53,11 +51,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     children,
     settings,
     location = { pathname: '/' },
-    user: {userPermissionsMenu,},
+    // user: {
+    //   userPermissionsMenu,
+    //   currentUser: { id: userId },
+    // },
   } = props;
 
   useEffect(() => {
-    dispatch({type: 'user/getUserPermissionsMenu'});
+    // TODO: 获取用户的有权限的菜单
+    // dispatch({
+    //   type: 'user/getUserPermissionsMenu',
+    //   payload: { userId },
+    // });
   }, []);
 
   const handleMenuCollapse = (payload: boolean): void => {
@@ -67,9 +72,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         payload,
       });
     }
-  }; // get children authority
+  };
 
-  // @ts-ignore
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
     authority: undefined,
   };
@@ -88,7 +92,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           return defaultDom;
         }
 
-        return <Link to={(menuItemProps.path as string)}>{defaultDom}</Link>;
+        return <Link to={menuItemProps.path as string}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => {
         if (routers.length && routers[0].path === '/manage_system') {
@@ -97,7 +101,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         return routers;
       }}
       itemRender={(route, params, routes, paths) => {
-        console.log('routes -> ', routes);
         const last = routes.indexOf(route) === routes.length - 1;
         return !last ? (
           <Link to={`/${paths[paths.length - 1]}`}>{route.breadcrumbName}</Link>
@@ -105,10 +108,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           <span>{route.breadcrumbName}</span>
         );
       }}
-      footerRender={() => <DefaultFooter links={false} copyright="TEMPLATE" />}
-      menuDataRender={() => userPermissionsMenu}
-      // TIPS: header 右侧用户 () => RightContent
-      rightContentRender={() => null}
+      footerRender={() => <DefaultFooter links={false} copyright="2020-亚联数科" />}
+      menuDataRender={(menuList: MenuDataItem[]): MenuDataItem[] => {
+        return menuList;
+
+        // TODO: 使用 userPermissionsMenu
+        // return userPermissionsMenu;
+      }}
+      rightContentRender={() => <RightContent />}
       {...props}
       {...settings}
     >
