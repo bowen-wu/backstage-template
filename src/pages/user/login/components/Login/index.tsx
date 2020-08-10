@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { FormComponentProps } from 'antd/es/form';
 import classNames from 'classnames';
 import LoginContext, { LoginContextProps } from './LoginContext';
+import { LoginParamsType } from '@/components/Interface';
 import LoginItem, { LoginItemProps, LoginItemType } from './LoginItem';
 
 import LoginSubmit from './LoginSubmit';
 import LoginTab from './LoginTab';
 import styles from './index.less';
-import {LoginParamsType} from "@/components/Interface";
 
 export interface LoginProps {
   defaultActiveKey?: string;

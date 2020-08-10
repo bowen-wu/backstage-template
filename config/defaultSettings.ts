@@ -55,7 +55,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '后台模板',
+  title: '催收系统',
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;

@@ -3,15 +3,12 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import {
-  DetailsModelState,
   StateType,
   TableListModelState,
   UserModelState,
   GlobalModelState,
   SearchFormModelState,
 } from '@/components/Interface';
-import { AuditQueueState } from './auditQueue';
-import { WorkingScheduleState } from './workingSchedule';
 
 export { GlobalModelState, SettingModelState, UserModelState };
 
@@ -34,11 +31,7 @@ export interface ConnectState {
   user: UserModelState;
   login: StateType;
   tableList: TableListModelState;
-  searchForm: SearchFormModelState,
-  details: DetailsModelState;
-  auditQueueState: AuditQueueState;
-  workingScheduleState: WorkingScheduleState;
-  history: HistoryModelState;
+  searchForm: SearchFormModelState;
 }
 
 export interface Route extends MenuDataItem {

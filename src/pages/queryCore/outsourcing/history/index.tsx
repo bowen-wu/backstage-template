@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import styles from './index.less';
 
-const Home = () => {
+const History = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -15,10 +15,10 @@ const Home = () => {
   return (
     <PageHeaderWrapper className={styles.main}>
       <Spin spinning={loading} size="large">
-        this is Home Page
+        this is queryCore outsourcing History Page
       </Spin>
     </PageHeaderWrapper>
   );
 };
 
-export default connect(({ user }: ConnectState) => ({ user }))(Home);
+export default connect(({ user }: ConnectState) => ({ user }))(History);

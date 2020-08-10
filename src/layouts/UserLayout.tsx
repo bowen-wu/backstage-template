@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import logo from '../assets/logo.png';
+import Logo from '../assets/logo_title.svg';
 import styles from './UserLayout.less';
 
 export interface UserLayoutProps extends ConnectProps {
@@ -42,13 +42,12 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <img alt="logo" className={styles.logo} src={logo} />
-              <span className={styles.title}>后台管理系统</span>
+              <img alt="logo" className={styles.logo} src={Logo} />
             </div>
           </div>
           {children}
         </div>
-        <DefaultFooter links={false} copyright="backstage-template" />
+        <DefaultFooter links={false} copyright="2020-亚联数科" />
       </div>
     </>
   );

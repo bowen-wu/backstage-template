@@ -31,7 +31,7 @@ export const getPageQuery = () => parse(window.location.href.split('?')[1]);
  * @param pathname string
  */
 export const getAuthorityFromRouter = <T extends { path: string }>(
-  router: T[] = [],
+  router: Route[] | undefined,
   pathname: string,
 ): T | undefined => {
   const authority = router.find(({ path }) => path && pathRegexp(path).exec(pathname));
@@ -80,15 +80,6 @@ export const getLastMonthStr = (connector = '-') => {
     return `${year - 1}${connector}${12}`;
   }
   return `${year}${connector}${monthStr}`;
-};
-
-export const getValidSearchInfo = (searchInfo: object) => {
-  Object.keys(searchInfo).forEach((key: string) => {
-    if (searchInfo[key] === '') {
-      delete searchInfo[key];
-    }
-  });
-  return searchInfo;
 };
 
 export const downloadImage = (imgsrc: string, name?: string) => {
