@@ -1,12 +1,14 @@
-import { Icon, Menu, Spin } from 'antd';
-import { ClickParam } from 'antd/es/menu';
+import { Menu, Spin } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
+import MenuInfo from 'antd/es/menu';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import { CurrentUser } from '@/components/Interface';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import {CurrentUser} from "@/components/Interface";
+import Avatar from '../../assets/avatar.svg';
 
 export interface GlobalHeaderRightProps extends ConnectProps {
   currentUser?: CurrentUser;
@@ -14,7 +16,7 @@ export interface GlobalHeaderRightProps extends ConnectProps {
 }
 
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
-  onMenuClick = (event: ClickParam) => {
+  onMenuClick = (event: MenuInfo) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -25,7 +27,6 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
           type: 'user/logout',
         });
       }
-
       return;
     }
 
@@ -33,34 +34,20 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
   };
 
   render(): React.ReactNode {
-    const {currentUser, menu} = this.props;
+    const { currentUser } = this.props;
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
-        {menu && (
-          <Menu.Item key="center">
-            <Icon type="user" />
-            个人中心
-          </Menu.Item>
-        )}
-        {menu && (
-          <Menu.Item key="settings">
-            <Icon type="setting" />
-            个人设置
-          </Menu.Item>
-        )}
-        {menu && <Menu.Divider />}
-
         <Menu.Item key="logout">
-          <Icon type="logout" />
+          <LogoutOutlined />
           退出登录
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.userName ? (
+    return currentUser && currentUser.username ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          {currentUser.userName}
-          <span className={styles.name}>{currentUser.name}</span>
+          <img className={styles.avatar} src={Avatar} alt="" />
+          <span className={styles.name}>{currentUser.username}</span>
         </span>
       </HeaderDropdown>
     ) : (

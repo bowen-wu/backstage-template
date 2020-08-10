@@ -46,7 +46,7 @@ yarn lint:fix
 
     | 参数 | 说明 | 类型 | 默认值 | required |
     | :-: | :-: | :-: | :-: | :-: |
-    | page | 页面唯一标识，同时对应着 `DB/index.ts` 中的相关配置 | string | - | true |
+    | page | 页面唯一标识，同时对应着 `DB/index.tsx` 中的相关配置 | string | - | true |
     | hasSearchForm | 是否含有 `searchForm` | boolean | false | false |
     | extraSearchInfo | 在搜索时会带上 `extraSearchInfo` 中的字段 | object | - | false |
     | searchActionsHandle | 搜索后的回调函数 | (action: ActionInterface, callback: (searchInfo: PageSearchInfoInterface) => void) => void | - | false |
@@ -55,77 +55,69 @@ yarn lint:fix
     | onRowSelectionChange | table 中表格行选中项发生变化时的回调 | (selectedRows: Array<ObjectInterface>) => void | - | false |
     | cascaderOption | 级联选择器数据 | CascaderOptionType[] | - | false |
     | cascaderLoadData | 级联选择器 loadData 方法 | (selectedOptions: CascaderOptionType[]) => void | - | false |
-    
 
-        <!--
-            TODO: 这两个参数需要更新
-            tableList: TableListModelState;
-            dispatch: Dispatch;
-        -->
-
-2.  在 `DB/index.ts` 中添加使用了 `components/PrivateComponents/pageBasic` 组件的相关配置
+2.  在 `DB/index.tsx` 中添加使用了 `components/PrivateComponents/pageBasic` 组件的相关配置
 
     - 数据结构
 
       ```
-      {
-          detailsUrl: '',
-          requestUrl: '',
-          searchInfo: {
-            searchList: [
-              {
-                type: '',
-                label: '',
-                key: '',
-              },
-            ],
-            searchActions: [
-              {
-                text: '查询',
-                type: 'primary',
-                key: 'search',
-              },
-            ],
+      userManagement: {
+        requestUrl: '/console/user',
+        requestMethod: MethodEnum.GET,
+        searchInfo: {
+          spanItem,
+          searchList: [
+            { type: 'input', label: '账号', key: 'account' },
+            { type: 'input', label: '角色', key: 'role_name' },
+            { type: 'input', label: '小组', key: 'group_name' },
+          ],
+          searchActions: [{ text: '搜索', type: 'primary', key: 'search' }],
+        },
+        tableInfo: {
+          scroll: {
+            x: 'max-content',
           },
-          tableInfo: {
-            columnList: [
-              {
-                title: '用户ID',
-                dataIndex: 'id',
-                key: 'id',
-                needRender: true,
-                enumerate: {
-                  1: '首页',
-                  2: '发现页',
-                },
-              },
-            ],
-            actionList: [
-              {
-                key: 'status',
-                depend: 'islock',
-                type: 'popconfirm',
-                exchangeStatusUrl: '/app/user/lockUnlock',
-                exchangeStatusParamsKeyObj: { appUserId: 'id', islock: 'islock' },
-                exchangeStatusKey: 'islock',
-                extraInfo: {
-                  title: {
-                    0: '你确定要停用该用户么？',
-                    1: '你确定要启用该用户么',
-                  },
-                },
-                status: {
-                  0: '停用',
-                  1: '启用',
-                },
-              },
-              {
-                route: '/manage_user/detail',
-                key: 'detail',
-              },
-            ],
+          rowSelection: {
+            fixed: true,
+            type: 'checkbox',
           },
-          pageObj,
+          actionList: [
+            { key: 'edit', type: 'Link', text: '编辑' },
+            {
+              key: 'status',
+              depend: 'status',
+              type: 'popConfirm',
+              status: (dependValue: number) => {
+                if (dependValue === 0) {
+                  return '禁用';
+                }
+                return '启用';
+              },
+              extraInfo: (dependValue: number) => {
+                if (dependValue === 0) {
+                  return '你确定要禁用该用户吗?';
+                }
+                return '你确定要启用该用户吗?';
+              },
+            },
+          ],
+          keyList: ['user_id'],
+          columnList: [
+            { title: '账号', dataIndex: 'account', key: 'account' },
+            { title: '邮箱', dataIndex: 'email', key: 'email' },
+            { title: '姓名', dataIndex: 'username', key: 'username' },
+            { title: '角色', dataIndex: 'role', key: 'role' },
+            { title: '所属小组', dataIndex: 'group', key: 'group' },
+            {
+              title: '状态',
+              dataIndex: 'status',
+              key: 'status',
+              render: (text: number) => (text === 0 ? '启用' : '禁用'),
+            },
+          ],
+        },
+        pageObj,
+        tableListRelatedFields,
       }
       ```
 
@@ -183,7 +175,7 @@ yarn lint:fix
     | key  | React 需要的 key，不能有相同的 |   string   |   -    |   true   |
     | text |          action 文案           |   string   |   -    |   true   |
     | type |       action Button type       | ButtonType |   -    |   true   |
-    
+
     ```
     注意：如果 searchForm 中的 action 的 key === 'reset'，那么 pageBasic 会有 reset 功能，但是如果在 externalProcessingActionKeyList 这个字段有 reset，会拦截 pageBasic 的 reset 事件
     ```
@@ -253,41 +245,40 @@ yarn lint:fix
     | :---: | :------------------------------: | :-----: | :--------: | :------: |
     | fixed |       把选择框列固定在左边       | boolean |     -      |  false   |
     | type  | 多选/单选，`checkbox` or `radio` | string  | `checkbox` |  false   |
-    
-    ` tableListRelatedFields ` 字段说明
-    
-    | 参数  |               说明               |  类型   |   默认值   | required |
-    | :---: | :------------------------------: | :-----: | :--------: | :------: |
-    | data  | 后台接口返回的包装的字段 | string  | data |  false   |
-    | total |       总条数     | string |     total      |  false   |
-    | list | 数组字段 | string | list | false |
-    
-    ` pageObj ` 字段说明
-    
-    | 参数  |               说明               |  类型   |   默认值   | required |
-    | :---: | :------------------------------: | :-----: | :--------: | :------: |
-    | pageSizeField  | pageSize 字段名称 | string  | - |   true  |
-    | currentField |       currentPage 字段名称     | string |     -      |  true   |
-    | [`${pageSizeField}`] | pageSize 字段 | number | - | true |
-    | [`${currentField}`] | currentPage 字段 | number | - | true |
-    
-    ` OptionInterface ` 字段说明
-    
-    | 参数  |               说明               |  类型   |   默认值   | required |
-    | :---: | :------------------------------: | :-----: | :--------: | :------: |
-    | label  | label | string  | - |   true  |
-    | value |      value     | string |     -      |  true   |
-    
-    ` OptionRequestParamsInterface ` 字段说明
-    
-    | 参数  |               说明               |  类型   |   默认值   | required |
-    | :---: | :------------------------------: | :-----: | :--------: | :------: |
-    | url  | 请求的 url  | string  | - |   true  |
-    | method |     请求的 method    | MethodEnum |     MethodEnum.GET      |  true   |
-    | listRelatedFields | 后台接口返回的包装的字段 | string | - | true |
-    | labelField | 返回的数据的 label 的字段 | string | - | true |
-    | valueField | 返回的数据的 value 的字段 | string | - | true |
 
+    `tableListRelatedFields` 字段说明
+
+    | 参数  |           说明            |  类型  | 默认值 | required |
+    | :---: | :-----------------------: | :----: | :----: | :------: |
+    | path  |  数据路径(使用 '/' 分隔)  | string |   -    |   true   |
+    | total | 总条数路径(使用 '/' 分隔) | string |   -    |   true   |
+
+    `pageObj` 字段说明
+
+    |         参数         |         说明         |  类型  | 默认值 | required |
+    | :------------------: | :------------------: | :----: | :----: | :------: |
+    |    pageSizeField     |  pageSize 字段名称   | string |   -    |   true   |
+    |     currentField     | currentPage 字段名称 | string |   -    |   true   |
+    | [`${pageSizeField}`] |    pageSize 字段     | number |   -    |   true   |
+    | [`${currentField}`]  |   currentPage 字段   | number |   -    |   true   |
+
+    `OptionInterface` 字段说明
+
+    | 参数  | 说明  |  类型  | 默认值 | required |
+    | :---: | :---: | :----: | :----: | :------: |
+    | label | label | string |   -    |   true   |
+    | value | value | string |   -    |   true   |
+
+    `OptionRequestParamsInterface` 字段说明
+
+    |         参数          |           说明            |    类型    |     默认值     | required |
+    | :-------------------: | :-----------------------: | :--------: | :------------: | :------: |
+    |          url          |        请求的 url         |   string   |       -        |   true   |
+    |        method         |       请求的 method       | MethodEnum | MethodEnum.GET |   true   |
+    | listRelatedFieldsPath |  数据路径(使用 '/' 分隔)  |   string   |       -        |   true   |
+    |      labelField       | 返回的数据的 label 的字段 |   string   |       -        |   true   |
+    |      valueField       | 返回的数据的 value 的字段 |   string   |       -        |   true   |
 
 ### 注意点
-- model 中的 ` namespace ` 和 ` connect.d.ts ` 文件中的 ` ConnectState ` interface 需要保持一致
+
+- model 中的 `namespace` 和 `connect.d.ts` 文件中的 `ConnectState` interface 需要保持一致

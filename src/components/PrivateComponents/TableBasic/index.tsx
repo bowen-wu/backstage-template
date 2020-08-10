@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
 import DBFn from '@/DB';
@@ -8,7 +8,14 @@ import styles from './index.less';
 const DB = DBFn();
 
 export default (props: TablePropsInterface) => {
-  const { page, dataSource, total } = props;
+  const {
+    page,
+    dataSource,
+    total,
+    actionInPage = {},
+    columnList: userColumnList,
+    rowSelectionVisible = false,
+  } = props;
   const {
     tableInfo: {
       columnList,
@@ -18,6 +25,26 @@ export default (props: TablePropsInterface) => {
       rowSelection: userRowSelection,
     },
   } = DB[page];
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string>('');
+
+  const onRowSelectionChange = (
+    nowSelectedRowKeys: string,
+    selectedRows: Array<ObjectInterface>,
+  ) => {
+    setSelectedRowKeys(nowSelectedRowKeys);
+    if (props.onRowSelectionChange) {
+      props.onRowSelectionChange(selectedRows);
+    }
+  };
+
+  const rowSelection = userRowSelection
+    ? { ...userRowSelection, onChange: onRowSelectionChange, selectedRowKeys }
+    : null;
+
+  useEffect(() => {
+    onRowSelectionChange('', []);
+  }, [props.isReset, props.isResetRowSelection]);
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
     props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
@@ -31,25 +58,23 @@ export default (props: TablePropsInterface) => {
       <span>
         {actionList.map((actionItem: TableActionInterface) => {
           const { route = '', actionText = '', title = '' } = (() => {
-            switch (actionItem.key) {
-              case 'status':
-                return {
-                  actionText:
-                    actionItem.status && actionItem.depend
-                      ? actionItem.status[record[actionItem.depend]]
-                      : '',
-                  title:
-                    actionItem.extraInfo && actionItem.depend
-                      ? actionItem.extraInfo.title[record[actionItem.depend]]
-                      : '',
-                };
-              default:
-                return {
-                  route: actionItem.route,
-                  actionText: actionItem.text || '详情',
-                  title: actionItem.extraInfo && actionItem.extraInfo.title,
-                };
+            if (actionItem.depend) {
+              return {
+                actionText:
+                  actionItem.status && actionItem.depend
+                    ? actionItem.status(record[actionItem.depend])
+                    : '',
+                title:
+                  actionItem.extraInfo && actionItem.depend
+                    ? actionItem.extraInfo(record[actionItem.depend])
+                    : '',
+              };
             }
+            return {
+              route: actionItem.route,
+              actionText: actionItem.text || '详情',
+              title: actionItem.extraInfo && actionItem.extraInfo.title,
+            };
           })();
           if (actionText) {
             if (route) {
@@ -93,28 +118,33 @@ export default (props: TablePropsInterface) => {
     ),
   };
 
-  const onRowSelectionChange = (selectedRowKeys: string, selectedRows: Array<ObjectInterface>) =>
-    props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
-
-  const rowSelection = userRowSelection
-    ? Object.assign({}, userRowSelection, { onChange: onRowSelectionChange })
-    : null;
-  const columns = [...columnList, actionList.length ? action : {}];
+  const columns = [...columnList, actionInPage, actionList.length ? action : {}];
+  const pagination = (() => {
+    const initPafination = {
+      total,
+      pageSizeOptions: ['10', '20', '30', '40'],
+      showSizeChanger: true,
+      showQuickJumper: true,
+      showTotal: () => `共 ${total} 条记录`,
+      onChange: onPageInfoChange,
+      onShowSizeChange: onPageInfoChange,
+    };
+    if (props.pagination === false) {
+      return false;
+    }
+    if (props.pagination === true) {
+      return initPafination;
+    }
+    return props.pagination || initPafination;
+  })();
   return (
     <div className={styles.container}>
       <Table
-        columns={columns}
+        columns={userColumnList || columns}
         dataSource={dataSource}
         scroll={scroll}
-        rowSelection={rowSelection}
-        pagination={{
-          total,
-          pageSizeOptions: ['1', '10', '20', '30', '40'],
-          showSizeChanger: true,
-          showTotal: () => `共 ${total} 条记录`,
-          onChange: onPageInfoChange,
-          onShowSizeChange: onPageInfoChange,
-        }}
+        rowSelection={rowSelectionVisible ? rowSelection : null}
+        pagination={pagination}
         rowKey={record =>
           keyList.reduce(
             (result: string, key: string) =>

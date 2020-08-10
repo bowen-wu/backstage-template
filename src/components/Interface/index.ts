@@ -1,20 +1,14 @@
 import { Effect } from 'dva';
 import { Dispatch, AnyAction, Reducer } from 'redux';
-import {CascaderOptionType} from 'antd/lib/cascader';
+import { CascaderOptionType } from 'antd/lib/cascader';
+import { ButtonType } from 'antd/lib/button';
 import { MenuDataItem, BasicLayoutProps as ProLayoutProps } from '@ant-design/pro-layout';
-
-export enum ButtonType {
-  Primary = 'primary',
-  Link = 'link',
-  Default = 'default',
-  Ghost = 'ghost',
-  Dashed = 'dashed',
-  Danger = 'danger',
-}
 
 export enum MethodEnum {
   POST = 'post',
   GET = 'get',
+  DELETE = 'delete', // delete与get参数放在query中
+  PUT = 'put', // put与post参数放在body中
 }
 
 export enum SearchItemControlType {
@@ -75,9 +69,9 @@ export interface SearchActionInterface extends ActionInterface {
 export interface TableActionInterface extends ActionInterface {
   type: ButtonType | string;
   route?: string;
-  status?: object;
+  status?: (dependValue: any) => string;
   depend?: string;
-  extraInfo?: ExtraInfoInterface;
+  extraInfo?: (dependValue: any) => string;
   exchangeStatusUrl: string;
   exchangeStatusKey: string;
   exchangeStatusParamsPosition?: ExchangeStatusParamsPositionEnum;
@@ -97,8 +91,14 @@ export interface PropsInterface {
 }
 
 export interface TablePropsInterface extends PropsInterface {
+  rowSelectionVisible?: boolean;
   actionsHandle?: (action: TableActionInterface, searchInfo: object, record?: any) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
+  isReset: boolean;
+  columnList?: Array<ObjectInterface>;
+  actionInPage?: object;
+  pagination?: ObjectInterface | boolean;
+  isResetRowSelection: boolean;
 }
 
 export interface SearchPropsInterface extends PropsInterface {
@@ -122,20 +122,13 @@ export interface StateType {
 
 export interface CurrentUser {
   token: string;
-  userName: string;
-  userId: string;
-  id: string;
+  username: string;
+  username_cn: string;
+  userid: number;
+  role: string;
 
   avatar?: string;
-  name?: string;
-  title?: string;
-  group?: string;
-  signature?: string;
-  tags?: {
-    key: string;
-    label: string;
-  }[];
-  unreadCount?: number;
+  group?: Array<any>;
 }
 
 export interface HomeInfo {
@@ -148,6 +141,7 @@ export interface UserModelState {
   currentUser: CurrentUser;
   status: StateType;
   userPermissionsMenu: MenuDataItem[];
+  userAuthButtonList: string[];
   homeInfo?: HomeInfo;
 }
 
@@ -162,7 +156,7 @@ export interface TableListModelState {
 }
 
 export interface SearchFormModelState {
-  [propsName: string]: Array<any>
+  [propsName: string]: Array<any>;
 }
 
 export interface UserModelType {
@@ -204,10 +198,6 @@ export interface SearchFormModelType {
   subscriptions?: object;
 }
 
-export interface getUserPermissionsMenuParams {
-  userId: string;
-}
-
 export interface CommodityDetailInterface {
   goodsDetailList: Array<any>;
 }
@@ -218,7 +208,6 @@ export interface PagePropsInterface extends ProLayoutProps {
   tableList?: TableListModelState;
   detailInfo?: CommodityDetailInterface;
   user?: UserModelState;
-  details?: DetailsModelState;
   global?: GlobalModelState;
 }
 
@@ -242,12 +231,20 @@ export interface PageBasicPropsInterface {
   hasSearchForm?: boolean;
   extraSearchInfo?: object;
   actionsHandle?: (action: ActionInterface, record: any) => void;
-  searchActionsHandle?: (action: ActionInterface, callback: (searchInfo: PageSearchInfoInterface) => void) => void;
+  searchActionsHandle?: (
+    action: ActionInterface,
+    callback: (searchInfo: PageSearchInfoInterface) => void,
+  ) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   refresh?: Boolean;
   dispatch: Dispatch;
   cascaderOption?: CascaderOptionType[];
   cascaderLoadData?: (selectedOptions: CascaderOptionType[]) => void;
+  middleLayout?: any;
+  rowSelectionVisible?: boolean;
+  localDataSource?: Array<object>;
+  actionInpage?: object;
+  isResetRowSelection?: boolean;
 }
 
 export interface TableColumnInterface {
@@ -255,22 +252,6 @@ export interface TableColumnInterface {
   dataIndex: string;
   key: string;
   render?: (text: any, record: any, index: number) => void;
-}
-
-export interface DetailsModelState {
-  info: ObjectInterface;
-}
-
-export interface DetailsModelType {
-  namespace: 'details';
-  state: DetailsModelState;
-  effects: {
-    getInfo: Effect;
-  };
-  reducers: {
-    saveInfo: Reducer<DetailsModelState>;
-  };
-  subscriptions?: object;
 }
 
 export interface ModifyModelState {}
@@ -323,4 +304,5 @@ export interface RichTextEditorPropsInterface {
 export interface ZoomPicturePropsInterface {
   pictureSrc: string;
   onCancelHandle?: () => void;
+  width?: string | number;
 }

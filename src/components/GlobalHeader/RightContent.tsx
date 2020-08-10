@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import HeaderSearch from '../HeaderSearch'; // import SelectLang from '../SelectLang';
+import Avatar from './AvatarDropdown';
 
 import styles from './index.less';
 
@@ -21,18 +21,7 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 
   return (
     <div className={className}>
-      <HeaderSearch
-        className={`${styles.action} ${styles.search}`}
-        placeholder="搜索"
-        defaultValue=""
-        dataSource={[]}
-        onSearch={value => {
-          console.log('input', value);
-        }}
-        onPressEnter={value => {
-          console.log('enter', value);
-        }}
-      />
+      <Avatar />
     </div>
   );
 };

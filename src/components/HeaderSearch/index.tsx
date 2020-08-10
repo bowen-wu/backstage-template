@@ -1,6 +1,7 @@
-import { AutoComplete, Icon, Input } from 'antd';
-import { AutoCompleteProps, DataSourceItemType } from 'antd/es/auto-complete';
+import { AutoComplete, Input } from 'antd';
+import { AutoCompleteProps } from 'antd/es/auto-complete';
 import React, { Component } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
 
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -14,7 +15,7 @@ export interface HeaderSearchProps {
   className: string;
   placeholder: string;
   defaultActiveFirstOption: boolean;
-  dataSource: DataSourceItemType[];
+  options: { value: string }[];
   defaultOpen: boolean;
   open?: boolean;
   defaultValue?: string;
@@ -33,7 +34,7 @@ export default class HeaderSearch extends Component<HeaderSearchProps, HeaderSea
     onChange: () => {},
     className: '',
     placeholder: '',
-    dataSource: [],
+    options: [],
     defaultOpen: false,
     onVisibleChange: () => {},
   };
@@ -122,7 +123,7 @@ export default class HeaderSearch extends Component<HeaderSearchProps, HeaderSea
           }
         }}
       >
-        <Icon type="search" key="Icon" />
+        <SearchOutlined key="Icon" />
         <AutoComplete
           key="AutoComplete"
           {...restProps}
