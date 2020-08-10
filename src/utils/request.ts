@@ -80,7 +80,8 @@ request.interceptors.response.use(async response => {
       description: data.msg,
     });
     window.localStorage.clear();
-    window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
+    window.location.href =
+      'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
   }
   if (data.code === '1') {
     notification.error({

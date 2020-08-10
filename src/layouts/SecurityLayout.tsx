@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'dva';
 import { PageLoading } from '@ant-design/pro-layout';
 import { ConnectState, ConnectProps } from '@/models/connect';
-import {CurrentUser} from '@/components/Interface';
+import { CurrentUser } from '@/components/Interface';
+
 const queryString = require('query-string');
 
 interface SecurityLayoutProps extends ConnectProps {
@@ -28,7 +29,7 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     });
 
     if (dispatch) {
-      dispatch({type: 'user/getUserInfo'});
+      dispatch({ type: 'user/getUserInfo' });
     }
   }
 
@@ -37,14 +38,15 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     const { children, loading, currentUser } = this.props;
     // todo -> 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）,
     console.log('currentUser -> ', currentUser);
-    const isLogin = currentUser && currentUser.token;
+    const isLogin = (currentUser && currentUser.token) || true;
 
     if ((!isLogin && loading) || !isReady) {
       return <PageLoading />;
     }
 
     if (!isLogin) {
-      window.location.href = 'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
+      window.location.href =
+        'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
     }
     return children;
   }
