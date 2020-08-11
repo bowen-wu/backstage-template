@@ -5,13 +5,12 @@ import { CascaderOptionType } from 'antd/lib/cascader';
 import TableBasic from '@/components/PrivateComponents/TableBasic';
 import SearchForm from '@/components/PrivateComponents/SearchForm';
 import {
-  ActionInterface,
   PageSearchInfoInterface,
   PageBasicPropsInterface,
   MethodEnum,
-  TableActionInterface,
-  ExchangeStatusParamsPositionEnum,
   ObjectInterface,
+  TableInfoActionItem,
+  SearchInfoItemAction,
 } from '@/components/Interface';
 import DBFn from '@/DB';
 import { ConnectState } from '@/models/connect';
@@ -27,7 +26,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     extraSearchInfo = {},
     dispatch,
     middleLayout,
-    actionInpage,
+    actionInPage,
   } = props;
 
   const {
@@ -46,7 +45,6 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     [`${pageObj.pageSizeField}`]: pageObj[`${pageObj.pageSizeField}`],
   };
 
-  const [updateData, setUpdateData] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
   const [isReset, setIsReset] = useState<boolean>(false);
@@ -68,12 +66,12 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       setLoading(false);
     };
     loadData();
-  }, [searchInfo, props.extraSearchInfo, props.page, props.refresh, updateData]);
+  }, [searchInfo, props.extraSearchInfo, props.page, props.refresh]);
 
   const onRowSelectionChange = (selectedRows: Array<ObjectInterface>) =>
     props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
 
-  const searchActionsHandle = (action: ActionInterface, searchInformation: object) => {
+  const searchActionsHandle = (action: SearchInfoItemAction, searchInformation: object) => {
     if (externalProcessingActionKeyList.indexOf(action.key) >= 0) {
       if (props.searchActionsHandle) {
         props.searchActionsHandle(action, (userSearchInfo: PageSearchInfoInterface) => {
@@ -108,42 +106,12 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     }
   };
 
-  const tableActionsHandle = async (action: TableActionInterface, record: any) => {
-    try {
-      setLoading(true);
-      const {
-        exchangeStatusUrl,
-        exchangeStatusParamsKeyObj,
-        exchangeStatusKey,
-        exchangeStatusParamsPosition = ExchangeStatusParamsPositionEnum.Params,
-        exchangeStatusObj = {},
-        status = {},
-      } = action;
-      const params = {};
-
-      Object.keys(exchangeStatusParamsKeyObj).map((paramsKey: string) => {
-        params[`${paramsKey}`] =
-          paramsKey === exchangeStatusKey
-            ? Object.keys(status)
-                .map(key => Number(key))
-                .filter(item => item !== record[`${exchangeStatusKey}`])[0]
-            : record[`${exchangeStatusParamsKeyObj[`${paramsKey}`]}`];
-        return null;
-      });
-      Object.assign(params, exchangeStatusObj);
-
-      await dispatch({
-        type: 'tableList/exchangeTableItemActionStatus',
-        payload: { exchangeStatusUrl, params, paramsPosition: exchangeStatusParamsPosition },
-      });
-      setUpdateData(!updateData);
-    } catch (error) {
-      if (props.actionsHandle) {
-        props.actionsHandle(action, record);
-      }
-    } finally {
-      setLoading(false);
+  const tableActionsHandle = async (action: TableInfoActionItem, record: any) => {
+    setLoading(true);
+    if (props.actionsHandle) {
+      await props.actionsHandle(action, record);
     }
+    setLoading(false);
   };
 
   const pageChangeHandle = (currentPage: number, pageSize: number | undefined) => {
@@ -189,7 +157,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
         pageChangeHandle={pageChangeHandle}
         onRowSelectionChange={onRowSelectionChange}
         isReset={isReset}
-        actionInPage={actionInpage}
+        actionInPage={actionInPage}
         isResetRowSelection={props.isResetRowSelection || false}
       />
     </Spin>

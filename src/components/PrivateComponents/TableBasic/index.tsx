@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
 import DBFn from '@/DB';
-import { TablePropsInterface, TableActionInterface, ObjectInterface } from '../../Interface';
+import { TablePropsInterface, ObjectInterface, TableInfoActionItem } from '../../Interface';
 import styles from './index.less';
 
 const DB = DBFn();
@@ -26,10 +26,10 @@ export default (props: TablePropsInterface) => {
     },
   } = DB[page];
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string>('');
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const onRowSelectionChange = (
-    nowSelectedRowKeys: string,
+    nowSelectedRowKeys: string[],
     selectedRows: Array<ObjectInterface>,
   ) => {
     setSelectedRowKeys(nowSelectedRowKeys);
@@ -43,7 +43,7 @@ export default (props: TablePropsInterface) => {
     : null;
 
   useEffect(() => {
-    onRowSelectionChange('', []);
+    onRowSelectionChange([], []);
   }, [props.isReset, props.isResetRowSelection]);
 
   const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
@@ -56,24 +56,23 @@ export default (props: TablePropsInterface) => {
     fixed: columnList.some((column: any) => !!column.fixed) ? 'right' : false,
     render: (text: string, record: any) => (
       <span>
-        {actionList.map((actionItem: TableActionInterface) => {
+        {actionList.map((actionItem: TableInfoActionItem) => {
           const { route = '', actionText = '', title = '' } = (() => {
             if (actionItem.depend) {
               return {
                 actionText:
-                  actionItem.status && actionItem.depend
-                    ? actionItem.status(record[actionItem.depend])
+                  actionItem.actionText && actionItem.depend
+                    ? actionItem.actionText(record[actionItem.depend])
                     : '',
                 title:
-                  actionItem.extraInfo && actionItem.depend
-                    ? actionItem.extraInfo(record[actionItem.depend])
+                  actionItem.title && actionItem.depend
+                    ? actionItem.title(record[actionItem.depend])
                     : '',
               };
             }
             return {
               route: actionItem.route,
               actionText: actionItem.text || '详情',
-              title: actionItem.extraInfo && actionItem.extraInfo.title,
             };
           })();
           if (actionText) {
@@ -143,7 +142,7 @@ export default (props: TablePropsInterface) => {
         columns={userColumnList || columns}
         dataSource={dataSource}
         scroll={scroll}
-        rowSelection={rowSelectionVisible ? rowSelection : null}
+        rowSelection={rowSelectionVisible ? rowSelection : undefined}
         pagination={pagination}
         rowKey={record =>
           keyList.reduce(

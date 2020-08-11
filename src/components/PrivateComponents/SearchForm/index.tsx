@@ -7,9 +7,11 @@ import DBFn from '@/DB';
 import { ConnectState } from '@/models/connect';
 import {
   SearchPropsInterface,
-  SearchActionInterface,
   SearchItemControlType,
-  MethodEnum,
+  SearchInfoItem,
+  SearchInfoItemOption,
+  SearchInfoItemOptionRequestParams,
+  SearchInfoItemAction,
 } from '../../Interface';
 import styles from './index.less';
 
@@ -29,43 +31,6 @@ const { MonthPicker, RangePicker } = DatePicker;
 const rangePickerDateFormat = 'YYYY-MM-DD';
 const monthPickerDateFormat = 'YYYY-MM';
 
-interface SearchItemOptionInterface {
-  value: string;
-  label: string;
-  isDefault?: boolean;
-}
-
-interface SearchItemDisabledDateInterface {
-  (current: any): boolean;
-}
-
-export interface OptionInterface {
-  label: string;
-  value: string | number;
-}
-
-interface OptionRequestParamsInterface {
-  url: string;
-  method: MethodEnum;
-  listRelatedFieldsPath: string;
-  labelField: string;
-  valueField: string;
-}
-
-interface SearchItemInterface {
-  key: string;
-  type: string;
-  label: string;
-  placeholder?: string;
-  optionList?: Array<SearchItemOptionInterface>;
-  optionRequestParams?: OptionRequestParamsInterface;
-  default?: string | Array<string>;
-  extra?: string;
-  disabledDate?: SearchItemDisabledDateInterface;
-  pickerFieldList?: Array<string>;
-  cascaderFieldList?: Array<string>;
-}
-
 const SearchForm = (props: SearchPropsInterface) => {
   const { page, dispatch, searchForm } = props;
   const {
@@ -77,14 +42,14 @@ const SearchForm = (props: SearchPropsInterface) => {
   useEffect(() => {
     const getSelectOptions = async () => {
       const selectList = searchList.filter(
-        (searchItem: SearchItemInterface) =>
+        (searchItem: SearchInfoItem) =>
           searchItem.type === SearchItemControlType.Select &&
           searchItem.optionRequestParams &&
           Object.keys(searchItem.optionRequestParams).length,
       );
       if (selectList.length) {
         await Promise.all(
-          selectList.map((searchItem: SearchItemInterface) => {
+          selectList.map((searchItem: SearchInfoItem) => {
             const { optionRequestParams, key } = searchItem;
             const {
               url: requestUrl,
@@ -92,7 +57,7 @@ const SearchForm = (props: SearchPropsInterface) => {
               listRelatedFieldsPath: relatedFieldsPath,
               valueField,
               labelField,
-            } = optionRequestParams as OptionRequestParamsInterface;
+            } = optionRequestParams as SearchInfoItemOptionRequestParams;
             return dispatch({
               type: 'searchForm/getOptionList',
               payload: { requestUrl, method, relatedFieldsPath, key, valueField, labelField },
@@ -104,7 +69,7 @@ const SearchForm = (props: SearchPropsInterface) => {
     getSelectOptions();
 
     const searchInfoCopy = {};
-    searchList.map((searchItem: SearchItemInterface) => {
+    searchList.map((searchItem: SearchInfoItem) => {
       const defaultValue: any = (() => {
         if (searchItem.type === SearchItemControlType.RangePicker && searchItem.default) {
           if (searchItem.default instanceof Array && searchItem.default.length === 2) {
@@ -156,7 +121,7 @@ const SearchForm = (props: SearchPropsInterface) => {
 
   const updateSearchInfo = (info: Object) => setSearchInfo({ ...searchInfo, ...info });
 
-  const actionHandle = (action: SearchActionInterface) => {
+  const actionHandle = (action: SearchInfoItemAction) => {
     if (action.key === 'reset') {
       setSearchInfo({});
     }
@@ -173,7 +138,7 @@ const SearchForm = (props: SearchPropsInterface) => {
     }
   };
 
-  const cascaderOnChange = (value: CascaderValueType, searchItem: SearchItemInterface) => {
+  const cascaderOnChange = (value: CascaderValueType, searchItem: SearchInfoItem) => {
     const info = {};
     (searchItem.cascaderFieldList as Array<string>).map((cascaderField: string, index: number) => {
       info[cascaderField] = value[index];
@@ -182,7 +147,7 @@ const SearchForm = (props: SearchPropsInterface) => {
     updateSearchInfo(info);
   };
 
-  const searchTypeEle = (searchItem: SearchItemInterface) => {
+  const searchTypeEle = (searchItem: SearchInfoItem) => {
     switch (searchItem.type) {
       case SearchItemControlType.Input:
         return (
@@ -203,7 +168,7 @@ const SearchForm = (props: SearchPropsInterface) => {
           return [];
         })();
         const defaultArray = optionList.filter(
-          (option: SearchItemOptionInterface) => option.isDefault && option,
+          (option: SearchInfoItemOption) => option.isDefault && option,
         );
         const defaultValue = defaultArray.length ? defaultArray[0].value : '';
         return (
@@ -212,7 +177,7 @@ const SearchForm = (props: SearchPropsInterface) => {
             style={{ flex: 1 }}
             onChange={(value: string) => handleChange(value, searchItem.key)}
           >
-            {optionList.map((option: OptionInterface) => (
+            {optionList.map((option: SearchInfoItemOption) => (
               <Option key={option.value} value={option.value}>
                 {option.label}
               </Option>
@@ -279,7 +244,7 @@ const SearchForm = (props: SearchPropsInterface) => {
   return (
     <div className={styles.container}>
       <Row gutter={12}>
-        {searchList.map((searchItem: SearchItemInterface) => (
+        {searchList.map((searchItem: SearchInfoItem) => (
           <Col
             key={searchItem.key}
             className={`${styles.margin} ${styles.flex}`}
@@ -291,8 +256,8 @@ const SearchForm = (props: SearchPropsInterface) => {
           </Col>
         ))}
         <Col span={spanItem.action} offset={spanItem.actionOffset}>
-          <Row gutter={12} className={styles.flex}>
-            {searchActions.map((action: SearchActionInterface) => (
+          <Row gutter={12} justify="end">
+            {searchActions.map((action: SearchInfoItemAction) => (
               <Col key={action.key}>
                 <Button
                   type={action.type}

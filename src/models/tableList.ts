@@ -1,5 +1,5 @@
-import {MethodEnum, TableListModelType, ExchangeStatusParamsPositionEnum} from "@/components/Interface";
-import {exchangeTableItemActionStatus, getTableListInfo} from "@/services/tableList";
+import { MethodEnum, TableListModelType } from '@/components/Interface';
+import { getTableListInfo } from '@/services/tableList';
 
 const basicTableListRelatedFields = {
   total: 'total',
@@ -19,28 +19,32 @@ const TableList: TableListModelType = {
    */
   effects: {
     *getTableList({ payload }, { call, put }) {
-      const { requestUrl, searchInfo, page, method = MethodEnum.GET, tableListRelatedFields: userTableListRelatedFields } = payload;
+      const {
+        requestUrl,
+        searchInfo,
+        page,
+        method = MethodEnum.GET,
+        tableListRelatedFields: userTableListRelatedFields,
+      } = payload;
       const response = yield call(getTableListInfo, requestUrl, method, searchInfo);
       yield put({
         type: 'saveTableList',
         payload: { ...response, page, userTableListRelatedFields },
       });
     },
-
-    * exchangeTableItemActionStatus({payload}, {call}) {
-      const {exchangeStatusUrl, params, paramsPosition = ExchangeStatusParamsPositionEnum.Params} = payload;
-      yield call(exchangeTableItemActionStatus, exchangeStatusUrl, params, paramsPosition);
-    },
   },
 
   // Action 处理器，处理同步动作，用来算出最新的 State
   reducers: {
     saveTableList(state, action) {
-      const tableListRelatedFields = action.payload.userTableListRelatedFields || basicTableListRelatedFields;
+      const tableListRelatedFields =
+        action.payload.userTableListRelatedFields || basicTableListRelatedFields;
       return {
         ...state,
-        [`${action.payload.page}_list`]: action.payload[tableListRelatedFields.data][tableListRelatedFields.list] || [],
-        [`${action.payload.page}_total`]: action.payload[tableListRelatedFields.data][tableListRelatedFields.total] || 0,
+        [`${action.payload.page}_list`]:
+          action.payload[tableListRelatedFields.data][tableListRelatedFields.list] || [],
+        [`${action.payload.page}_total`]:
+          action.payload[tableListRelatedFields.data][tableListRelatedFields.total] || 0,
       };
     },
   },

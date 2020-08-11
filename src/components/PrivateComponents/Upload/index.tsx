@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, Upload, message } from 'antd';
+import { Upload, message } from 'antd';
 import { connect } from 'dva';
 import { ObjectInterface, UploadFilePropInterface } from '@/components/Interface';
 import { ConnectState } from '@/models/connect';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons/lib';
 
 const UploadFile = (props: UploadFilePropInterface) => {
   const { dispatch } = props;
@@ -65,7 +66,7 @@ const UploadFile = (props: UploadFilePropInterface) => {
           <img src={defaultValue} alt="" style={{ width: '100%' }} />
         ) : (
           <div>
-            <Icon type={loading ? 'loading' : 'plus'} />
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
             <div className="ant-upload-text">Upload</div>
           </div>
         )}
