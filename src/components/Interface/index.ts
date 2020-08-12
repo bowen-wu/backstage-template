@@ -8,6 +8,7 @@ import { ReactNode } from 'react';
 import { TableRowSelection } from 'antd/lib/table/interface';
 import * as React from 'react';
 import { RenderedCell } from 'rc-table/lib/interface';
+import { TableProps as RcTableProps } from 'rc-table/lib/Table';
 
 /**
  * public start
@@ -71,6 +72,7 @@ export interface SearchInfoItem {
   key: string;
   default?: string | Array<string>;
   pickerFieldList?: Array<string>;
+  mode?: 'multiple' | 'tags';
 
   // TODO: 未检测
   placeholder?: string;
@@ -123,6 +125,9 @@ interface TableInfoInterface<T> extends TableProps<T> {
   columnList: Array<TableInfoColumnItem<RecordType>>;
   actionList: Array<TableInfoActionItem>;
   rowSelection?: TableRowSelection<T>;
+  scroll?: RcTableProps<RecordType>['scroll'] & {
+    scrollToFirstRowOnChange?: boolean;
+  };
 }
 
 interface PageInterface {

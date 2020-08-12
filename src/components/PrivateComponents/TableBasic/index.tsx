@@ -93,6 +93,7 @@ export default (props: TablePropsInterface) => {
                   key={actionItem.key}
                   title={title}
                   onConfirm={() => props.actionsHandle && props.actionsHandle(actionItem, record)}
+                  icon={actionItem.icon}
                 >
                   <span className={styles.actionItem} style={{ color: '#FF5400' }}>
                     {actionText}

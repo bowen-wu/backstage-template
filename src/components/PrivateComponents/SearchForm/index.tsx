@@ -170,12 +170,14 @@ const SearchForm = (props: SearchPropsInterface) => {
         const defaultArray = optionList.filter(
           (option: SearchInfoItemOption) => option.isDefault && option,
         );
+
         const defaultValue = defaultArray.length ? defaultArray[0].value : '';
         return (
           <Select
-            value={searchInfo[searchItem.key] || defaultValue}
+            value={searchInfo[searchItem.key] || (searchItem.mode ? [] : defaultValue)}
             style={{ flex: 1 }}
             onChange={(value: string) => handleChange(value, searchItem.key)}
+            mode={searchItem.mode}
           >
             {optionList.map((option: SearchInfoItemOption) => (
               <Option key={option.value} value={option.value}>
