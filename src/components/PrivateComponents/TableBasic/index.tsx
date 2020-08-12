@@ -26,10 +26,10 @@ export default (props: TablePropsInterface) => {
     },
   } = DB[page];
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onRowSelectionChange = (
-    nowSelectedRowKeys: string[],
+    nowSelectedRowKeys: React.Key[],
     selectedRows: Array<ObjectInterface>,
   ) => {
     setSelectedRowKeys(nowSelectedRowKeys);
@@ -40,7 +40,7 @@ export default (props: TablePropsInterface) => {
 
   const rowSelection = userRowSelection
     ? { ...userRowSelection, onChange: onRowSelectionChange, selectedRowKeys }
-    : null;
+    : undefined;
 
   useEffect(() => {
     onRowSelectionChange([], []);
@@ -119,7 +119,7 @@ export default (props: TablePropsInterface) => {
 
   const columns = [...columnList, actionInPage, actionList.length ? action : {}];
   const pagination = (() => {
-    const initPafination = {
+    const initPagination = {
       total,
       pageSizeOptions: ['10', '20', '30', '40'],
       showSizeChanger: true,
@@ -132,9 +132,9 @@ export default (props: TablePropsInterface) => {
       return false;
     }
     if (props.pagination === true) {
-      return initPafination;
+      return initPagination;
     }
-    return props.pagination || initPafination;
+    return props.pagination || initPagination;
   })();
   return (
     <div className={styles.container}>

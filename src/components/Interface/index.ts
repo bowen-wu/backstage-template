@@ -6,6 +6,8 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import { TableProps } from 'antd/lib/table';
 import { ReactNode } from 'react';
 import { TableRowSelection } from 'antd/lib/table/interface';
+import * as React from 'react';
+import { RenderedCell } from 'rc-table/lib/interface';
 
 /**
  * public start
@@ -23,11 +25,6 @@ export enum SearchItemControlType {
   RangePicker = 'rangePicker',
   MonthPicker = 'monthPicker',
   Cascader = 'cascader',
-}
-
-export enum ExchangeStatusParamsPositionEnum {
-  Params = 'params',
-  Data = 'data',
 }
 
 export interface OptionItem {
@@ -97,10 +94,17 @@ interface SearchInfoInterface {
   externalProcessingActionKeyList?: Array<string>;
 }
 
-interface TableInfoColumnItem {
+interface TableInfoColumnItem<RecordType> {
   title: string;
   dataIndex: string;
   key: string;
+
+  render?: (
+    value: any,
+    record: RecordType,
+    index: number,
+  ) => React.ReactNode | RenderedCell<RecordType>;
+  fixed?: 'left' | 'right' | boolean;
 }
 
 export interface TableInfoActionItem {
@@ -116,7 +120,7 @@ export interface TableInfoActionItem {
 
 interface TableInfoInterface<T> extends TableProps<T> {
   keyList: string[];
-  columnList: Array<TableInfoColumnItem>;
+  columnList: Array<TableInfoColumnItem<RecordType>>;
   actionList: Array<TableInfoActionItem>;
   rowSelection?: TableRowSelection<T>;
 }
