@@ -194,6 +194,7 @@ export interface PageBasicPropsInterface {
   actionsHandle?: (action: TableInfoActionItem, record: any) => void;
   searchActionsHandle?: (
     action: SearchInfoItemAction,
+    searchInfo: PageSearchInfoInterface,
     callback: (searchInfo: PageSearchInfoInterface) => void,
   ) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;

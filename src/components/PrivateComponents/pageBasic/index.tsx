@@ -72,20 +72,19 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
 
   const searchActionsHandle = (action: SearchInfoItemAction, searchInformation: object) => {
+    const searchInfoCopy = { ...searchInfo, ...searchInformation };
+    const callback = (userSearchInfo: PageSearchInfoInterface) => {
+      if (userSearchInfo[`${pageObj.pageSizeField}`] && userSearchInfo[`${pageObj.currentField}`]) {
+        setSearchInfo(userSearchInfo);
+      } else {
+        throw new Error(
+          `reset 时需要给最基本的 page 相关字段，${pageObj.pageSizeField} 和 ${pageObj.currentField}！`,
+        );
+      }
+    };
     if (externalProcessingActionKeyList.indexOf(action.key) >= 0) {
       if (props.searchActionsHandle) {
-        props.searchActionsHandle(action, (userSearchInfo: PageSearchInfoInterface) => {
-          if (
-            userSearchInfo[`${pageObj.pageSizeField}`] &&
-            userSearchInfo[`${pageObj.currentField}`]
-          ) {
-            setSearchInfo(userSearchInfo);
-          } else {
-            throw new Error(
-              `reset 时需要给最基本的 page 相关字段，${pageObj.pageSizeField} 和 ${pageObj.currentField}！`,
-            );
-          }
-        });
+        props.searchActionsHandle(action, searchInfoCopy, callback);
       }
       return;
     }
@@ -93,10 +92,11 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       setSearchInfo({ ...pageInfo });
       setIsReset(!isReset);
     } else {
-      setSearchInfo({
-        ...searchInfo,
-        ...searchInformation,
-      });
+      setSearchInfo(searchInfoCopy);
+    }
+
+    if (props.searchActionsHandle) {
+      props.searchActionsHandle(action, searchInfoCopy, callback);
     }
   };
 
