@@ -39,12 +39,11 @@ const TableList: TableListModelType = {
     saveTableList(state, action) {
       const tableListRelatedFields =
         action.payload.userTableListRelatedFields || basicTableListRelatedFields;
+      const tableData = action.payload[tableListRelatedFields.data];
       return {
         ...state,
-        [`${action.payload.page}_list`]:
-          action.payload[tableListRelatedFields.data][tableListRelatedFields.list] || [],
-        [`${action.payload.page}_total`]:
-          action.payload[tableListRelatedFields.data][tableListRelatedFields.total] || 0,
+        [`${action.payload.page}_list`]: tableData ? tableData[tableListRelatedFields.list] : [],
+        [`${action.payload.page}_total`]: tableData ? tableData[tableListRelatedFields.total] : 0,
       };
     },
   },
