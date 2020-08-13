@@ -14,7 +14,7 @@ export default (props: TablePropsInterface) => {
     total,
     actionInPage = {},
     columnList: userColumnList,
-    rowSelectionVisible = false,
+    rowSelectionVisible = true,
   } = props;
   const {
     tableInfo: {
