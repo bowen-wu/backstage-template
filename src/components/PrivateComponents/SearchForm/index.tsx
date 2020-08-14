@@ -32,10 +32,10 @@ const rangePickerDateFormat = 'YYYY-MM-DD';
 const monthPickerDateFormat = 'YYYY-MM';
 
 const SearchForm = (props: SearchPropsInterface) => {
-  const { page, dispatch, searchForm } = props;
+  const { page, dispatch, searchForm, config = {} } = props;
   const {
     searchInfo: { searchList, searchActions, spanItem: userSpanItem },
-  } = DB[page];
+  } = DB[page] || config;
   const [searchInfo, setSearchInfo] = useState<object>({});
   const spanItem = { ...basicSpanItem, ...userSpanItem };
 

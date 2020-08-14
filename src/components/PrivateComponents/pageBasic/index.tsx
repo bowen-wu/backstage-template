@@ -27,6 +27,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     dispatch,
     middleLayout,
     actionInPage,
+    config,
   } = props;
 
   const {
@@ -35,7 +36,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     requestMethod,
     searchInfo: { externalProcessingActionKeyList = [] },
     tableListRelatedFields,
-  } = DB[page];
+  } = DB[page] || config;
   if (!pageObj || !Object.keys(pageObj).length) {
     throw new Error('请传入正确的 pageObj');
   }
@@ -142,6 +143,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       {hasSearchForm ? (
         <SearchForm
           page={page}
+          config={config}
           actionsHandle={searchActionsHandle}
           cascaderLoadData={cascaderLoadData}
           cascaderOption={props.cascaderOption}
@@ -149,6 +151,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       ) : null}
       {middleLayout}
       <TableBasic
+        config={config}
         rowSelectionVisible={rowSelectionVisible}
         page={page}
         dataSource={dataSource}

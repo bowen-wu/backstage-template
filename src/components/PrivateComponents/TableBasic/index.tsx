@@ -15,6 +15,7 @@ export default (props: TablePropsInterface) => {
     actionInPage = {},
     columnList: userColumnList,
     rowSelectionVisible = true,
+    config = {},
   } = props;
   const {
     tableInfo: {
@@ -24,7 +25,7 @@ export default (props: TablePropsInterface) => {
       keyList = [],
       rowSelection: userRowSelection,
     },
-  } = DB[page];
+  } = DB[page] || config;
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 

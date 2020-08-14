@@ -189,6 +189,7 @@ export interface PageSearchInfoInterface {
 export interface PageBasicPropsInterface {
   page: string;
   tableList: TableListModelState;
+  config?: DBItemInterface;
   hasSearchForm?: boolean;
   extraSearchInfo?: object;
   actionsHandle?: (action: TableInfoActionItem, record: any) => void;
@@ -218,6 +219,7 @@ export interface PropsInterface {
 
 export interface TablePropsInterface extends PropsInterface {
   rowSelectionVisible?: boolean;
+  config?: DBItemInterface;
   actionsHandle?: (action: TableInfoActionItem, searchInfo: object, record?: any) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   isReset: boolean;
@@ -229,6 +231,7 @@ export interface TablePropsInterface extends PropsInterface {
 
 export interface SearchPropsInterface extends PropsInterface {
   dispatch: Dispatch<AnyAction>;
+  config?: DBItemInterface;
   actionsHandle?: (action: SearchInfoItemAction, searchInfo: object, record?: any) => void;
   searchForm: SearchFormModelState;
   cascaderOption?: CascaderOptionType[];
