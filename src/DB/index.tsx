@@ -5,14 +5,14 @@ import { DBInterface, MethodEnum } from '@/components/Interface';
 
 const lastDayStr = getDayStr(-1);
 
-const pageObj = {
+export const pageObj = {
   currentField: 'pageIndex',
   pageSizeField: 'pageSize',
   pageIndex: 1,
   pageSize: 10,
 };
 
-const DB: DBInterface<T> = {
+const DB: DBInterface = {
   queryCoreOutsourcingHistory: {
     requestUrl: '',
     requestMethod: MethodEnum.POST,

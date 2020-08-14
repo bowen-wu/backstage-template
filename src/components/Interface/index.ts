@@ -96,7 +96,7 @@ interface SearchInfoInterface {
   externalProcessingActionKeyList?: Array<string>;
 }
 
-interface TableInfoColumnItem<RecordType> {
+interface TableInfoColumnItem<RecordType = any> {
   title: string;
   dataIndex: string;
   key: string;
@@ -109,20 +109,20 @@ interface TableInfoColumnItem<RecordType> {
   fixed?: 'left' | 'right' | boolean;
 }
 
-export interface TableInfoActionItem {
+export interface TableInfoActionItem<U = any, K = any> {
   key: string;
   type: ButtonType | string;
   route?: string;
   text?: string;
   depend?: string;
   icon?: ReactNode | null;
-  title?: (dependValue: string) => string | ReactNode;
-  actionText?: (dependValue: string) => string;
+  title?: (dependValue: U) => U | ReactNode;
+  actionText?: (dependValue: K) => K | ReactNode;
 }
 
-interface TableInfoInterface<T> extends TableProps<T> {
+interface TableInfoInterface<T = any> extends TableProps<T> {
   keyList: string[];
-  columnList: Array<TableInfoColumnItem<RecordType>>;
+  columnList: Array<TableInfoColumnItem>;
   actionList: Array<TableInfoActionItem>;
   rowSelection?: TableRowSelection<T>;
   scroll?: RcTableProps<RecordType>['scroll'] & {
@@ -137,19 +137,19 @@ interface PageInterface {
   pageSize: number;
 }
 
-interface DBItemInterface<T> {
+export interface DBItemInterface {
   requestUrl: string;
   requestMethod: MethodEnum;
   searchInfo: SearchInfoInterface;
-  tableInfo: TableInfoInterface<T>;
+  tableInfo: TableInfoInterface;
   pageObj: PageInterface;
 
   tableListRelatedFields?: { page: string; total: string };
   detailsUrl?: string;
 }
 
-export interface DBInterface<T> {
-  [propsName: string]: DBItemInterface<T>;
+export interface DBInterface {
+  [propsName: string]: DBItemInterface;
 }
 
 /**
