@@ -5,8 +5,15 @@ import { ButtonType } from 'antd/lib/button';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { TableProps } from 'antd/lib/table';
 import { ReactNode } from 'react';
-import { TableRowSelection } from 'antd/lib/table/interface';
-import * as React from 'react';
+import {
+  CompareFn,
+  Key,
+  SorterResult,
+  SortOrder,
+  TableCurrentDataSource,
+  TablePaginationConfig,
+  TableRowSelection,
+} from 'antd/lib/table/interface';
 import { RenderedCell } from 'rc-table/lib/interface';
 import { TableProps as RcTableProps } from 'rc-table/lib/Table';
 
@@ -101,12 +108,10 @@ interface TableInfoColumnItem<RecordType = any> {
   dataIndex: string;
   key: string;
 
-  render?: (
-    value: any,
-    record: RecordType,
-    index: number,
-  ) => React.ReactNode | RenderedCell<RecordType>;
+  render?: (value: any, record: RecordType, index: number) => ReactNode | RenderedCell<RecordType>;
   fixed?: 'left' | 'right' | boolean;
+  sorter?: boolean | CompareFn<RecordType> | { compare: CompareFn<RecordType>; multiple: number };
+  sortDirections?: SortOrder[];
 }
 
 export interface TableInfoActionItem<U = any, K = any> {
@@ -120,7 +125,7 @@ export interface TableInfoActionItem<U = any, K = any> {
   actionText?: (dependValue: K) => K | ReactNode;
 }
 
-interface TableInfoInterface<T = any> extends TableProps<T> {
+interface TableInfoInterface<T = any, RecordType extends object = any> extends TableProps<T> {
   keyList: string[];
   columnList: Array<TableInfoColumnItem>;
   actionList: Array<TableInfoActionItem>;
@@ -186,9 +191,11 @@ export interface PageSearchInfoInterface {
   [propsName: string]: number | string;
 }
 
-export interface PageBasicPropsInterface {
+export interface PageBasicPropsInterface<RecordType extends object = any> {
   page: string;
   tableList: TableListModelState;
+  dispatch: Dispatch;
+
   config?: DBItemInterface;
   hasSearchForm?: boolean;
   extraSearchInfo?: object;
@@ -200,14 +207,18 @@ export interface PageBasicPropsInterface {
   ) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
   refresh?: Boolean;
-  dispatch: Dispatch;
   cascaderOption?: CascaderOptionType[];
   cascaderLoadData?: (selectedOptions: CascaderOptionType[]) => void;
   middleLayout?: any;
   rowSelectionVisible?: boolean;
-  localDataSource?: Array<object>;
+  localDataSource?: Array<ObjectInterface>;
   actionInPage?: object;
-  isResetRowSelection?: boolean;
+  onTableChange?: (
+    pagination: TablePaginationConfig,
+    filters: Record<string, Key[] | null>,
+    sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
+    extra: TableCurrentDataSource<RecordType>,
+  ) => void;
 }
 
 export interface PropsInterface {
@@ -217,16 +228,22 @@ export interface PropsInterface {
   pageChangeHandle?: (currentPage: number, pageSize: number | undefined) => void;
 }
 
-export interface TablePropsInterface extends PropsInterface {
+export interface TablePropsInterface<RecordType extends object = any> extends PropsInterface {
+  isReset: boolean;
+
   rowSelectionVisible?: boolean;
   config?: DBItemInterface;
   actionsHandle?: (action: TableInfoActionItem, searchInfo: object, record?: any) => void;
   onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
-  isReset: boolean;
-  columnList?: Array<ObjectInterface>;
+  columnList?: Array<TableInfoColumnItem>;
   actionInPage?: object;
   pagination?: ObjectInterface | boolean;
-  isResetRowSelection: boolean;
+  onChange?: (
+    pagination: TablePaginationConfig,
+    filters: Record<string, Key[] | null>,
+    sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
+    extra: TableCurrentDataSource<RecordType>,
+  ) => void;
 }
 
 export interface SearchPropsInterface extends PropsInterface {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Spin } from 'antd';
 import { connect } from 'dva';
 import { CascaderOptionType } from 'antd/lib/cascader';
@@ -14,6 +14,12 @@ import {
 } from '@/components/Interface';
 import DBFn from '@/DB';
 import { ConnectState } from '@/models/connect';
+import {
+  Key,
+  SorterResult,
+  TableCurrentDataSource,
+  TablePaginationConfig,
+} from 'antd/lib/table/interface';
 
 const DB = DBFn();
 
@@ -22,21 +28,21 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     localDataSource,
     rowSelectionVisible,
     page,
-    hasSearchForm = true,
-    extraSearchInfo = {},
     dispatch,
     middleLayout,
     actionInPage,
+    hasSearchForm = true,
+    extraSearchInfo = {},
     config,
   } = props;
-
   const {
     requestUrl,
     pageObj,
     requestMethod,
-    searchInfo: { externalProcessingActionKeyList = [] },
     tableListRelatedFields,
+    searchInfo: { externalProcessingActionKeyList = [] },
   } = DB[page] || config;
+
   if (!pageObj || !Object.keys(pageObj).length) {
     throw new Error('请传入正确的 pageObj');
   }
@@ -49,6 +55,20 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
   const [isReset, setIsReset] = useState<boolean>(false);
+
+  let dataSource = [];
+  if (localDataSource) {
+    dataSource = localDataSource;
+  } else if (props.tableList) {
+    dataSource = props.tableList[`${page}_list`];
+  }
+
+  let totalLength = 0;
+  if (localDataSource) {
+    totalLength = localDataSource.length;
+  } else if (props.tableList) {
+    totalLength = props.tableList[`${page}_total`];
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -125,19 +145,20 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     }
   };
 
-  let dataSource = [];
-  if (localDataSource) {
-    dataSource = localDataSource;
-  } else if (props.tableList) {
-    dataSource = props.tableList[`${page}_list`];
-  }
+  const onChange: <RecordType>(
+    pagination: TablePaginationConfig,
+    filters: Record<string, Key[] | null>,
+    sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
+    extra: TableCurrentDataSource<RecordType>,
+  ) => void = useCallback(
+    (currentPagination, filters, sorter, extra): void => {
+      if (props.onTableChange) {
+        props.onTableChange(currentPagination, filters, sorter, extra);
+      }
+    },
+    [props.onTableChange],
+  );
 
-  let totalLength = 0;
-  if (localDataSource) {
-    totalLength = localDataSource.length;
-  } else if (props.tableList) {
-    totalLength = props.tableList[`${page}_total`];
-  }
   return (
     <Spin spinning={loading} size="large">
       {hasSearchForm ? (
@@ -159,9 +180,9 @@ const PageBasic = (props: PageBasicPropsInterface) => {
         actionsHandle={tableActionsHandle}
         pageChangeHandle={pageChangeHandle}
         onRowSelectionChange={onRowSelectionChange}
-        isReset={isReset}
         actionInPage={actionInPage}
-        isResetRowSelection={props.isResetRowSelection || false}
+        isReset={isReset}
+        onChange={onChange}
       />
     </Spin>
   );

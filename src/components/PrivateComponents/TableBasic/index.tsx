@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
 import DBFn from '@/DB';
+import {
+  Key,
+  SorterResult,
+  TableCurrentDataSource,
+  TablePaginationConfig,
+} from 'antd/lib/table/interface';
 import { TablePropsInterface, ObjectInterface, TableInfoActionItem } from '../../Interface';
+
 import styles from './index.less';
 
 const DB = DBFn();
@@ -29,15 +36,15 @@ export default (props: TablePropsInterface) => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const onRowSelectionChange = (
-    nowSelectedRowKeys: React.Key[],
-    selectedRows: Array<ObjectInterface>,
-  ) => {
-    setSelectedRowKeys(nowSelectedRowKeys);
-    if (props.onRowSelectionChange) {
-      props.onRowSelectionChange(selectedRows);
-    }
-  };
+  const onRowSelectionChange = useCallback(
+    (nowSelectedRowKeys: React.Key[], selectedRows: Array<ObjectInterface>) => {
+      setSelectedRowKeys(nowSelectedRowKeys);
+      if (props.onRowSelectionChange) {
+        props.onRowSelectionChange(selectedRows);
+      }
+    },
+    [props.onRowSelectionChange],
+  );
 
   const rowSelection = userRowSelection
     ? { ...userRowSelection, onChange: onRowSelectionChange, selectedRowKeys }
@@ -45,10 +52,13 @@ export default (props: TablePropsInterface) => {
 
   useEffect(() => {
     onRowSelectionChange([], []);
-  }, [props.isReset, props.isResetRowSelection]);
+  }, [props.isReset]);
 
-  const onPageInfoChange = (currentPage: number, pageSize: number | undefined) =>
-    props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize);
+  const onPageInfoChange = useCallback(
+    (currentPage: number, pageSize: number | undefined) =>
+      props.pageChangeHandle && props.pageChangeHandle(currentPage, pageSize),
+    [props.pageChangeHandle],
+  );
 
   const action = {
     title: '操作',
@@ -138,6 +148,21 @@ export default (props: TablePropsInterface) => {
     }
     return props.pagination || initPagination;
   })();
+
+  const onChange: <RecordType>(
+    pagination: TablePaginationConfig,
+    filters: Record<string, Key[] | null>,
+    sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
+    extra: TableCurrentDataSource<RecordType>,
+  ) => void = useCallback(
+    (currentPagination, filters, sorter, extra): void => {
+      if (props.onChange) {
+        props.onChange(currentPagination, filters, sorter, extra);
+      }
+    },
+    [props.onChange],
+  );
+
   return (
     <div className={styles.container}>
       <Table
@@ -146,6 +171,7 @@ export default (props: TablePropsInterface) => {
         scroll={scroll}
         rowSelection={rowSelectionVisible ? rowSelection : undefined}
         pagination={pagination}
+        onChange={onChange}
         rowKey={record =>
           keyList.reduce(
             (result: string, key: string) =>
