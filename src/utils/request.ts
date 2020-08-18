@@ -45,11 +45,7 @@ const errorHandler = (error: { response: Response }): Response => {
   return response;
 };
 
-/**
- * 基础参数
- */
-const baseUrl = 'http://192.168.203.176:8081';
-const basePrefix = '/audit-manager';
+console.log('BASEURL -> ', BASEURL);
 
 /**
  * 配置request请求时的默认参数
@@ -57,7 +53,7 @@ const basePrefix = '/audit-manager';
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
-  prefix: `${baseUrl}${basePrefix}`, // 前缀, 用于覆盖统一设置的prefix
+  prefix: `${BASEURL}${BASEPREFIX}`, // 前缀, 用于覆盖统一设置的prefix
 });
 
 /**
