@@ -34,6 +34,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     hasSearchForm = true,
     extraSearchInfo = {},
     config,
+    disabledRequest = true,
   } = props;
   const {
     requestUrl,
@@ -52,7 +53,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     [`${pageObj.pageSizeField}`]: pageObj[`${pageObj.pageSizeField}`],
   };
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
   const [isReset, setIsReset] = useState<boolean>(false);
 
@@ -71,8 +72,8 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   }
 
   useEffect(() => {
-    setLoading(true);
     const loadData = async () => {
+      setLoading(true);
       const method = requestMethod || MethodEnum.GET;
       await dispatch({
         type: 'tableList/getTableList',
@@ -86,8 +87,10 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       });
       setLoading(false);
     };
-    loadData();
-  }, [searchInfo, props.extraSearchInfo, props.page, props.refresh]);
+    if (disabledRequest) {
+      loadData();
+    }
+  }, [searchInfo, props.extraSearchInfo, props.page, props.refresh, props.disabledRequest]);
 
   const onRowSelectionChange = (selectedRows: Array<ObjectInterface>) =>
     props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);

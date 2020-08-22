@@ -219,6 +219,7 @@ export interface PageBasicPropsInterface<RecordType extends object = any> {
     sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
     extra: TableCurrentDataSource<RecordType>,
   ) => void;
+  disabledRequest?: boolean;
 }
 
 export interface PropsInterface {
