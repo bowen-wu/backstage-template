@@ -1,4 +1,4 @@
-import { MethodEnum, TableListModelType } from '@/components/Interface';
+import { MethodEnum, ObjectInterface, TableListModelType } from '@/components/Interface';
 import { getTableListInfo } from '@/services/tableList';
 
 const basicTableListRelatedFields = {
@@ -39,17 +39,19 @@ const TableList: TableListModelType = {
     saveTableList(state, action) {
       const tableListRelatedFields =
         action.payload.userTableListRelatedFields || basicTableListRelatedFields;
-      const tableData = action.payload[tableListRelatedFields.data];
+      const targetListData = tableListRelatedFields.dataPath
+        .split('/')
+        .reduce((result: ObjectInterface, path: string) => result[path], action.payload);
+      const targetDataTotal = tableListRelatedFields.totalPath
+        .split('/')
+        .reduce((result: ObjectInterface, path: string) => result[path], action.payload);
       return {
         ...state,
-        [`${action.payload.page}_list`]: tableData ? tableData[tableListRelatedFields.list] : [],
-        [`${action.payload.page}_total`]: tableData ? tableData[tableListRelatedFields.total] : 0,
+        [`${action.payload.page}_list`]: targetListData || [],
+        [`${action.payload.page}_total`]: targetDataTotal || 0,
       };
     },
   },
-
-  // elm@0.17 的新概念，在 dom ready 后执行
-  subscriptions: {},
 };
 
 export default TableList;

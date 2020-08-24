@@ -149,7 +149,7 @@ export interface DBItemInterface {
   tableInfo: TableInfoInterface;
   pageObj: PageInterface;
 
-  tableListRelatedFields?: { page: string; total: string };
+  tableListRelatedFields?: { dataPath: string; totalPath: string };
   detailsUrl?: string;
 }
 
