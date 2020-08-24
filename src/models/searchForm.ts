@@ -29,15 +29,16 @@ const SearchForm: SearchFormModelType = {
   reducers: {
     saveOptionList(state, action) {
       const { relatedFieldsPath, labelField, valueField } = action.payload;
-      const list = action.payload[relatedFieldsPath]
-        ? action.payload[relatedFieldsPath].map((item: ObjectInterface) => ({
-            label: item[labelField],
-            value: item[valueField],
-          }))
-        : [];
+      const list = relatedFieldsPath
+        .split('/')
+        .reduce((result: ObjectInterface, path: string) => result[path], action.payload)
+        .map((item: ObjectInterface) => ({
+          label: item[labelField],
+          value: item[valueField],
+        }));
       return {
         ...state,
-        [`${action.payload.key}_option_list`]: list,
+        [`${action.payload.key}_option_list`]: list || [],
       };
     },
   },
