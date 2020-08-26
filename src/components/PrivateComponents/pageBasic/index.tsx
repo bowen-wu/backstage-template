@@ -42,7 +42,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     requestMethod,
     tableListRelatedFields,
     searchInfo: { externalProcessingActionKeyList = [] },
-    tableInfo: { pagination },
+    tableInfo: { pagination = true },
   } = DB[page] || config;
 
   if (pagination && (!pageObj || !Object.keys(pageObj).length)) {

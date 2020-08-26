@@ -10,14 +10,14 @@ const SearchForm: SearchFormModelType = {
     *getOptionList({ payload }, { call, put }) {
       const {
         requestUrl,
-        searchInfo = {},
+        extraSearchInfo = {},
         method = MethodEnum.GET,
         relatedFieldsPath,
         key,
         valueField,
         labelField,
       } = payload;
-      const response = yield call(getOptionListInfo, requestUrl, method, searchInfo);
+      const response = yield call(getOptionListInfo, requestUrl, method, extraSearchInfo);
       yield put({
         type: 'saveOptionList',
         payload: { ...response, relatedFieldsPath, key, valueField, labelField },

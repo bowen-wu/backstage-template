@@ -57,10 +57,19 @@ const SearchForm = (props: SearchPropsInterface) => {
               listRelatedFieldsPath: relatedFieldsPath,
               valueField,
               labelField,
+              extraSearchInfo = {},
             } = optionRequestParams as SearchInfoItemOptionRequestParams;
             return dispatch({
               type: 'searchForm/getOptionList',
-              payload: { requestUrl, method, relatedFieldsPath, key, valueField, labelField },
+              payload: {
+                requestUrl,
+                method,
+                relatedFieldsPath,
+                key,
+                valueField,
+                labelField,
+                extraSearchInfo,
+              },
             });
           }),
         );

@@ -71,6 +71,7 @@ export interface SearchInfoItemOptionRequestParams {
   listRelatedFieldsPath: string;
   labelField: string;
   valueField: string;
+  extraSearchInfo?: ObjectInterface;
 }
 
 export interface SearchInfoItem {
