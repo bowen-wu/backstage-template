@@ -42,16 +42,19 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     requestMethod,
     tableListRelatedFields,
     searchInfo: { externalProcessingActionKeyList = [] },
+    tableInfo: { pagination },
   } = DB[page] || config;
 
-  if (!pageObj || !Object.keys(pageObj).length) {
+  if (pagination && (!pageObj || !Object.keys(pageObj).length)) {
     throw new Error('请传入正确的 pageObj');
   }
 
-  const pageInfo = {
-    [`${pageObj.currentField}`]: pageObj[`${pageObj.currentField}`],
-    [`${pageObj.pageSizeField}`]: pageObj[`${pageObj.pageSizeField}`],
-  };
+  const pageInfo = pagination
+    ? {
+        [`${pageObj.currentField}`]: pageObj[`${pageObj.currentField}`],
+        [`${pageObj.pageSizeField}`]: pageObj[`${pageObj.pageSizeField}`],
+      }
+    : {};
 
   const [loading, setLoading] = useState<boolean>(false);
   const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
@@ -88,7 +91,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       setLoading(false);
     };
     if (disabledRequest) {
-      loadData();
+      void loadData();
     }
   }, [searchInfo, props.extraSearchInfo, props.page, props.refresh, props.disabledRequest]);
 
@@ -98,12 +101,15 @@ const PageBasic = (props: PageBasicPropsInterface) => {
   const searchActionsHandle = (action: SearchInfoItemAction, searchInformation: object) => {
     const searchInfoCopy = { ...searchInfo, ...searchInformation };
     const callback = (userSearchInfo: PageSearchInfoInterface) => {
-      if (userSearchInfo[`${pageObj.pageSizeField}`] && userSearchInfo[`${pageObj.currentField}`]) {
-        setSearchInfo(userSearchInfo);
-      } else {
+      if (
+        pagination &&
+        !(userSearchInfo[`${pageObj.pageSizeField}`] && userSearchInfo[`${pageObj.currentField}`])
+      ) {
         throw new Error(
           `reset 时需要给最基本的 page 相关字段，${pageObj.pageSizeField} 和 ${pageObj.currentField}！`,
         );
+      } else {
+        setSearchInfo(userSearchInfo);
       }
     };
     if (externalProcessingActionKeyList.indexOf(action.key) >= 0) {
@@ -186,6 +192,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
         actionInPage={actionInPage}
         isReset={isReset}
         onChange={onChange}
+        pagination={pagination}
       />
     </Spin>
   );

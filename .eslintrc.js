@@ -6,6 +6,7 @@ module.exports = {
     page: true,
   },
   rules: {
+    'no-void': 0,
     'react/jsx-curly-newline': 0,
     'prefer-object-spread': 0,
     quotes: ['error', 'single', { allowTemplateLiterals: true }],

@@ -66,7 +66,7 @@ const SearchForm = (props: SearchPropsInterface) => {
         );
       }
     };
-    getSelectOptions();
+    void getSelectOptions();
 
     const searchInfoCopy = {};
     searchList.map((searchItem: SearchInfoItem) => {
@@ -92,15 +92,13 @@ const SearchForm = (props: SearchPropsInterface) => {
         if (searchItem.type === SearchItemControlType.Cascader) {
           if (searchItem.cascaderFieldList instanceof Array) {
             const cascaderObj = {};
-            // eslint-disable-next-line array-callback-return
             searchItem.cascaderFieldList.map((cascaderField: string) => {
               cascaderObj[cascaderField] = '';
+              return null;
             });
             return cascaderObj;
-            // eslint-disable-next-line no-else-return
-          } else {
-            throw new Error('请提供正确的 cascaderFieldList 字段！');
           }
+          throw new Error('请提供正确的 cascaderFieldList 字段！');
         }
         return {};
       })();
@@ -113,6 +111,10 @@ const SearchForm = (props: SearchPropsInterface) => {
               [`${(searchItem.pickerFieldList as Array<string>)[1]}`]: defaultValue[1],
             }
           : { [`${searchItem.key}`]: '' },
+        searchItem.type === SearchItemControlType.Select &&
+          (searchItem.mode === 'multiple' || searchItem.mode === 'tags')
+          ? { [`${searchItem.key}`]: [] }
+          : {},
       );
       return null;
     });
