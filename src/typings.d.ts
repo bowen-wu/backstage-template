@@ -29,6 +29,6 @@ interface Window {
   reloadAuthorized: () => void;
 }
 
-declare let ga: Function;
+declare const NEED_DRAG: boolean;
 declare const BASEURL: string;
 declare const BASEPREFIX: string;

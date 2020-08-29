@@ -4,6 +4,7 @@ module.exports = {
     BASEURL: true,
     BASEPREFIX: true,
     page: true,
+    NEED_DRAG: true,
   },
   rules: {
     'no-void': 0,

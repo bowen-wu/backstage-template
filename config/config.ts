@@ -126,7 +126,9 @@ export default {
   theme: {
     'primary-color': '#FF5400',
   },
-  define: {},
+  define: {
+    NEED_DRAG: true,
+  },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
     javascriptEnabled: true,

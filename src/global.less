@@ -12,6 +12,7 @@ body,
 
 .ant-layout {
   min-height: 100vh;
+  z-index: 9;
 }
 
 canvas {
@@ -52,6 +53,7 @@ ol {
 @media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
   body .ant-design-pro > .ant-layout {
     min-height: 100vh;
+    z-index: 9;
   }
 }
 
@@ -72,5 +74,14 @@ ol {
 
   .ant-tabs-nav-container {
     font-size: 28px;
+  }
+
+  .ant-pro-sider-menu-sider {
+    z-index: 9;
+  }
+
+  section.ant-layout > div {
+    position: relative;
+    z-index: 9;
   }
 }

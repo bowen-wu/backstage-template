@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { AnyAction, Dispatch } from 'redux';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { RouterTypes } from 'umi';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
@@ -9,6 +9,8 @@ import {
   GlobalModelState,
   SearchFormModelState,
 } from '@/components/Interface';
+
+import { DragState } from '@/models/drag';
 
 export { GlobalModelState, SettingModelState, UserModelState };
 
@@ -32,6 +34,7 @@ export interface ConnectState {
   login: StateType;
   tableList: TableListModelState;
   searchForm: SearchFormModelState;
+  dragState: DragState;
 }
 
 export interface Route extends MenuDataItem {

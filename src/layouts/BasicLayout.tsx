@@ -2,7 +2,7 @@ import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
   Settings,
-  DefaultFooter,
+  DefaultFooter
 } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
@@ -13,7 +13,10 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import logo from '../assets/logo.svg';
+import Container from '@/components/PrivateComponents/Drag/Container';
 
 const noMatch = (
   <Result
@@ -69,16 +72,16 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     if (dispatch) {
       dispatch({
         type: 'global/changeLayoutCollapsed',
-        payload,
+        payload
       });
     }
   };
 
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: undefined,
+    authority: undefined
   };
-  return (
-    <ProLayout
+
+  const proLayoutElement = (<ProLayout
       logo={logo}
       menuHeaderRender={(logoDom, titleDom) => (
         <Link to="/">
@@ -124,10 +127,18 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
       </Authorized>
     </ProLayout>
   );
+
+  return NEED_DRAG ? (
+    <DndProvider backend={HTML5Backend}>
+      <Container>
+        {proLayoutElement}
+      </Container>
+    </DndProvider>
+  ) : proLayoutElement;
 };
 
 export default connect(({ global, settings, user }: ConnectState) => ({
   user,
   collapsed: global.collapsed,
-  settings,
+  settings
 }))(BasicLayout);
