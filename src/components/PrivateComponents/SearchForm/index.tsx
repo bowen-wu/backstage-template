@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Input, Row, Col, Button, DatePicker, Cascader } from 'antd';
+import { Select, Input, Row, Col, Button, DatePicker, Cascader, InputNumber } from 'antd';
 import { CascaderOptionType, CascaderValueType } from 'antd/lib/cascader';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -141,7 +141,8 @@ const SearchForm = (props: SearchPropsInterface) => {
     }
   };
 
-  const handleChange = (value: string, key: string) => updateSearchInfo({ [key]: value });
+  const handleChange = (value: string | number | undefined, key: string) =>
+    updateSearchInfo({ [key]: value });
 
   const cascaderLoadData = async (selectedOptions: CascaderOptionType[] | undefined) => {
     if (selectedOptions && props.cascaderLoadData) {
@@ -166,6 +167,16 @@ const SearchForm = (props: SearchPropsInterface) => {
             value={searchInfo[searchItem.key]}
             placeholder={searchItem.placeholder || '请输入'}
             onChange={e => handleChange(e.target.value, searchItem.key)}
+          />
+        );
+      case SearchItemControlType.InputNumber:
+        return (
+          <InputNumber
+            value={searchInfo[searchItem.key]}
+            style={{ flex: 1 }}
+            min={typeof searchItem.min === 'number' ? searchItem.min : Number.MIN_SAFE_INTEGER}
+            max={typeof searchItem.max === 'number' ? searchItem.max : Number.MAX_SAFE_INTEGER}
+            onChange={value => handleChange(value, searchItem.key)}
           />
         );
       case SearchItemControlType.Select: {

@@ -33,6 +33,7 @@ export enum SearchItemControlType {
   RangePicker = 'rangePicker',
   MonthPicker = 'monthPicker',
   Cascader = 'cascader',
+  InputNumber = 'inputNumber',
 }
 
 export interface OptionItem {
@@ -81,6 +82,8 @@ export interface SearchInfoItem {
   default?: string | Array<string>;
   pickerFieldList?: Array<string>;
   mode?: 'multiple' | 'tags';
+  min?: number;
+  max?: number;
 
   // TODO: 未检测
   placeholder?: string;

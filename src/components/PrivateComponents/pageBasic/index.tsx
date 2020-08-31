@@ -76,6 +76,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
 
   useEffect(() => {
     const loadData = async () => {
+      console.log('extraSearchInfo -> ', extraSearchInfo);
       setLoading(true);
       const method = requestMethod || MethodEnum.GET;
       await dispatch({
@@ -164,6 +165,8 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     extra: TableCurrentDataSource<RecordType>,
   ) => void = useCallback(
     (currentPagination, filters, sorter, extra): void => {
+      console.log('currentPagination -> ', currentPagination);
+      console.log('extra -> ', extra);
       if (props.onTableChange) {
         props.onTableChange(currentPagination, filters, sorter, extra);
       }
