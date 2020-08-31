@@ -1,10 +1,10 @@
+import React, { ReactNode } from 'react';
 import { Effect } from 'dva';
 import { Dispatch, AnyAction, Reducer } from 'redux';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import { ButtonType } from 'antd/lib/button';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { TableProps } from 'antd/lib/table';
-import { ReactNode } from 'react';
 import {
   CompareFn,
   Key,
@@ -206,7 +206,10 @@ export interface PageBasicPropsInterface<RecordType extends object = any> {
     searchInfo: PageSearchInfoInterface,
     callback: (searchInfo: PageSearchInfoInterface) => void,
   ) => void;
-  onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
+  onRowSelectionChange?: (
+    selectedRowKeys: React.Key[],
+    selectedRows: Array<ObjectInterface>,
+  ) => void;
   refresh?: Boolean;
   cascaderOption?: CascaderOptionType[];
   cascaderLoadData?: (selectedOptions: CascaderOptionType[]) => void;
@@ -236,7 +239,10 @@ export interface TablePropsInterface<RecordType extends object = any> extends Pr
   rowSelectionVisible?: boolean;
   config?: DBItemInterface;
   actionsHandle?: (action: TableInfoActionItem, searchInfo: object, record?: any) => void;
-  onRowSelectionChange?: (selectedRows: Array<ObjectInterface>) => void;
+  onRowSelectionChange?: (
+    selectedRowKeys: React.Key[],
+    selectedRows: Array<ObjectInterface>,
+  ) => void;
   columnList?: Array<TableInfoColumnItem>;
   actionInPage?: object;
   pagination?: ObjectInterface | boolean;

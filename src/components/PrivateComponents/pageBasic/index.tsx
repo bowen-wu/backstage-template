@@ -95,8 +95,11 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     }
   }, [searchInfo, props.extraSearchInfo, props.page, props.refresh, props.disabledRequest]);
 
-  const onRowSelectionChange = (selectedRows: Array<ObjectInterface>) =>
-    props.onRowSelectionChange && props.onRowSelectionChange(selectedRows);
+  const onRowSelectionChange = (
+    currentSelectedRowKeys: React.Key[],
+    selectedRows: Array<ObjectInterface>,
+  ) =>
+    props.onRowSelectionChange && props.onRowSelectionChange(currentSelectedRowKeys, selectedRows);
 
   const searchActionsHandle = (action: SearchInfoItemAction, searchInformation: object) => {
     const searchInfoCopy = { ...searchInfo, ...searchInformation };

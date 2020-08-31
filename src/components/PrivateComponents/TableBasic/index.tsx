@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
 import DBFn from '@/DB';
@@ -37,18 +37,22 @@ export default (props: TablePropsInterface) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const onRowSelectionChange = useCallback(
-    (nowSelectedRowKeys: React.Key[], selectedRows: Array<ObjectInterface>) => {
-      setSelectedRowKeys(nowSelectedRowKeys);
+    (currentSelectedRowKeys: React.Key[], selectedRows: Array<ObjectInterface>) => {
+      setSelectedRowKeys(currentSelectedRowKeys);
       if (props.onRowSelectionChange) {
-        props.onRowSelectionChange(selectedRows);
+        props.onRowSelectionChange(currentSelectedRowKeys, selectedRows);
       }
     },
     [props.onRowSelectionChange],
   );
 
-  const rowSelection = userRowSelection
-    ? { ...userRowSelection, onChange: onRowSelectionChange, selectedRowKeys }
-    : undefined;
+  const rowSelection = useMemo(
+    () =>
+      userRowSelection
+        ? { onChange: onRowSelectionChange, selectedRowKeys, ...userRowSelection }
+        : undefined,
+    [userRowSelection, onRowSelectionChange, selectedRowKeys],
+  );
 
   useEffect(() => {
     onRowSelectionChange([], []);
