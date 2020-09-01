@@ -1,9 +1,26 @@
 @import '../basic';
 
+.layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .children {
-  position: absolute;
-  z-index: 1020;
-  padding: 12px;
-  background-color: #fff;
-  box-shadow: 0 3px 6px -4px rgba(0,0,0,.12), 0 6px 16px 0 rgba(0,0,0,.08), 0 9px 28px 8px rgba(0,0,0,.05);
+  background: #fff;
+  box-shadow: 0 2px 6px 0 rgba(205,68,0,0.42);
+  position: fixed;
+  z-index: 10;
+  cursor: move;
+}
+
+
+.preview_box {
+  display: inline-flex;
+  padding: 1em;
+  cursor: move;
 }
