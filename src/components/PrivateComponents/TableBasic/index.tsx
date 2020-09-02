@@ -179,8 +179,8 @@ export default (props: TablePropsInterface) => {
         rowKey={record =>
           keyList.reduce(
             (result: string, key: string) =>
-              record[`${key}`] ? `${result}-${record[`${key}`]}` : result,
-            '',
+              record[key] ? `${result}-${record[key]}` : result,
+            String(record.uniqueKey),
           )
         }
       />

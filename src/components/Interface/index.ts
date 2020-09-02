@@ -142,8 +142,7 @@ interface TableInfoInterface<T = any, RecordType extends object = any> extends T
 interface PageInterface {
   currentField: string;
   pageSizeField: string;
-  pageIndex: number;
-  pageSize: number;
+  [propsName: string]: number | string;
 }
 
 export interface DBItemInterface {

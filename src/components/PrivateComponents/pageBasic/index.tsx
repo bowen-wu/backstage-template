@@ -45,7 +45,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     tableInfo: { pagination = true },
   } = DB[page] || config;
 
-  if (pagination && (!pageObj || !Object.keys(pageObj).length)) {
+  if (pagination && (!pageObj || !Object.keys(pageObj).length || typeof pageObj[`${pageObj.currentField}`] !== 'number' || typeof pageObj[`${pageObj.pageSizeField}`] !== 'number')) {
     throw new Error('请传入正确的 pageObj');
   }
 

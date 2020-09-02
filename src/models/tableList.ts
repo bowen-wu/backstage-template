@@ -4,7 +4,7 @@ import { getTableListInfo } from '@/services/tableList';
 const basicTableListRelatedFields = {
   total: 'total',
   data: 'data',
-  list: 'list',
+  list: 'list'
 };
 
 const TableList: TableListModelType = {
@@ -18,20 +18,20 @@ const TableList: TableListModelType = {
    put：发出一个 Action，类似于 dispatch
    */
   effects: {
-    *getTableList({ payload }, { call, put }) {
+    * getTableList({ payload }, { call, put }) {
       const {
         requestUrl,
         searchInfo,
         page,
         method = MethodEnum.GET,
-        tableListRelatedFields: userTableListRelatedFields,
+        tableListRelatedFields: userTableListRelatedFields
       } = payload;
       const response = yield call(getTableListInfo, requestUrl, method, searchInfo);
       yield put({
         type: 'saveTableList',
-        payload: { ...response, page, userTableListRelatedFields },
+        payload: { ...response, page, userTableListRelatedFields }
       });
-    },
+    }
   },
 
   // Action 处理器，处理同步动作，用来算出最新的 State
@@ -41,17 +41,20 @@ const TableList: TableListModelType = {
         action.payload.userTableListRelatedFields || basicTableListRelatedFields;
       const targetListData = tableListRelatedFields.dataPath
         .split('/')
-        .reduce((result: ObjectInterface, path: string) => result[path], action.payload);
+        .reduce((result: ObjectInterface, path: string) => result[path], action.payload).map((item: ObjectInterface, index: number) => ({
+          ...item,
+          uniqueKey: index
+        }));
       const targetDataTotal = tableListRelatedFields.totalPath
         .split('/')
         .reduce((result: ObjectInterface, path: string) => result[path], action.payload);
       return {
         ...state,
         [`${action.payload.page}_list`]: targetListData || [],
-        [`${action.payload.page}_total`]: targetDataTotal || 0,
+        [`${action.payload.page}_total`]: targetDataTotal || 0
       };
-    },
-  },
+    }
+  }
 };
 
 export default TableList;
