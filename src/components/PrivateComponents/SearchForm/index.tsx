@@ -28,7 +28,6 @@ const basicSpanItem = {
 };
 const { Option } = Select;
 const { MonthPicker, RangePicker } = DatePicker;
-const rangePickerDateFormat = 'YYYY-MM-DD';
 const monthPickerDateFormat = 'YYYY-MM';
 
 const SearchForm = (props: SearchPropsInterface) => {
@@ -82,6 +81,7 @@ const SearchForm = (props: SearchPropsInterface) => {
       const defaultValue: any = (() => {
         if (searchItem.type === SearchItemControlType.RangePicker && searchItem.default) {
           if (searchItem.default instanceof Array && searchItem.default.length === 2) {
+            const { rangePickerDateFormat = 'YYYY-MM-DD' } = searchItem;
             return [
               moment(searchItem.default[0], rangePickerDateFormat),
               moment(searchItem.default[1], rangePickerDateFormat),
@@ -160,13 +160,26 @@ const SearchForm = (props: SearchPropsInterface) => {
   };
 
   const searchTypeEle = (searchItem: SearchInfoItem) => {
-    switch (searchItem.type) {
+    const {
+      type,
+      label,
+      key,
+      pickerFieldList,
+      rangePickerDateFormat = 'YYYY-MM-DD',
+      optionList,
+      optionRequestParams,
+      extra,
+      cascaderFieldList,
+      ...rest
+    } = searchItem;
+    switch (type) {
       case SearchItemControlType.Input:
         return (
           <Input
-            value={searchInfo[searchItem.key]}
+            value={searchInfo[key]}
             placeholder={searchItem.placeholder || '请输入'}
-            onChange={e => handleChange(e.target.value, searchItem.key)}
+            onChange={e => handleChange(e.target.value, key)}
+            {...rest}
           />
         );
       case SearchItemControlType.InputNumber:
@@ -177,45 +190,18 @@ const SearchForm = (props: SearchPropsInterface) => {
             min={typeof searchItem.min === 'number' ? searchItem.min : Number.MIN_SAFE_INTEGER}
             max={typeof searchItem.max === 'number' ? searchItem.max : Number.MAX_SAFE_INTEGER}
             onChange={value => handleChange(value, searchItem.key)}
+            {...rest}
           />
         );
-      case SearchItemControlType.Select: {
-        const optionList = (() => {
-          if (searchForm[`${searchItem.key}_option_list`]) {
-            return searchForm[`${searchItem.key}_option_list`];
-          }
-          if (searchItem.optionList instanceof Array) {
-            return searchItem.optionList;
-          }
-          return [];
-        })();
-        const defaultArray = optionList.filter(
-          (option: SearchInfoItemOption) => option.isDefault && option,
-        );
-
-        const defaultValue = defaultArray.length ? defaultArray[0].value : '';
-        return (
-          <Select
-            value={searchInfo[searchItem.key] || (searchItem.mode ? [] : defaultValue)}
-            style={{ flex: 1 }}
-            onChange={(value: string) => handleChange(value, searchItem.key)}
-            mode={searchItem.mode}
-          >
-            {optionList.map((option: SearchInfoItemOption) => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
-        );
-      }
       case SearchItemControlType.RangePicker: {
-        const { placeholder = '请选择' } = searchItem;
-        if (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2) {
+        if (!pickerFieldList || pickerFieldList.length !== 2) {
           throw new Error('pickerFieldList 字段必须提供！');
         }
-        const pickerFirstField = searchItem.pickerFieldList[0];
-        const pickerSecondField = searchItem.pickerFieldList[1];
+        const pickerFirstField = pickerFieldList[0];
+        const pickerSecondField = pickerFieldList[1];
+        delete rest.placeholder;
+        const { placeholder = '请选择', mode, ...isolateRest } = rest;
+
         return (
           <RangePicker
             value={
@@ -235,18 +221,44 @@ const SearchForm = (props: SearchPropsInterface) => {
                 [`${pickerSecondField}`]: dateStringArr[1],
               })
             }
+            {...isolateRest}
           />
         );
       }
-      case SearchItemControlType.MonthPicker:
-        return (
-          <MonthPicker
-            value={moment(searchItem.default, monthPickerDateFormat) || ''}
-            style={{ flex: 1 }}
-            disabledDate={searchItem.disabledDate}
-            placeholder={searchItem.placeholder || '请选择'}
-          />
+      case SearchItemControlType.Select: {
+        const isolateOptionList = (() => {
+          if (searchForm[`${searchItem.key}_option_list`]) {
+            return searchForm[`${searchItem.key}_option_list`];
+          }
+          if (optionList instanceof Array) {
+            return optionList;
+          }
+          return [];
+        })();
+        const defaultArray = isolateOptionList.filter(
+          (option: SearchInfoItemOption) => option.isDefault && option,
         );
+
+        const defaultValue = defaultArray.length ? defaultArray[0].value : '';
+        return (
+          <Select
+            value={searchInfo[searchItem.key] || (searchItem.mode ? [] : defaultValue)}
+            style={{ flex: 1 }}
+            onChange={(value: string) => handleChange(value, searchItem.key)}
+            {...rest}
+          >
+            {isolateOptionList.map((option: SearchInfoItemOption) => {
+              const { value: optionValue, label: optionLabel, ...optionRest } = option;
+              return (
+                <Option key={optionValue} value={optionValue} {...optionRest}>
+                  {optionLabel}
+                </Option>
+              );
+            })}
+          </Select>
+        );
+      }
+      // TODO： 未验证 ...reset
       case SearchItemControlType.Cascader:
         return (
           <Cascader
@@ -258,6 +270,19 @@ const SearchForm = (props: SearchPropsInterface) => {
             loadData={cascaderLoadData}
             onChange={(value: CascaderValueType) => cascaderOnChange(value, searchItem)}
             changeOnSelect
+            {...rest}
+          />
+        );
+      case SearchItemControlType.MonthPicker:
+        if (typeof searchItem.default !== 'string') {
+          throw new Error('请填写正确的 default 值！');
+        }
+        return (
+          <MonthPicker
+            value={moment(searchItem.default, monthPickerDateFormat) || ''}
+            style={{ flex: 1 }}
+            disabledDate={searchItem.disabledDate}
+            placeholder={searchItem.placeholder || '请选择'}
           />
         );
       default:

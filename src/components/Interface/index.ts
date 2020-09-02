@@ -16,6 +16,7 @@ import {
 } from 'antd/lib/table/interface';
 import { RenderedCell } from 'rc-table/lib/interface';
 import { TableProps as RcTableProps } from 'rc-table/lib/Table';
+import { OptionCoreData } from 'rc-select/lib/interface';
 
 /**
  * public start
@@ -36,7 +37,7 @@ export enum SearchItemControlType {
   InputNumber = 'inputNumber',
 }
 
-export interface OptionItem {
+export interface OptionItem extends OptionCoreData {
   label: string;
   value: string | number;
 }
@@ -79,19 +80,21 @@ export interface SearchInfoItem {
   type: string;
   label: string;
   key: string;
-  default?: string | Array<string>;
+  default?: string | number | string[] | number[] | ReadonlyArray<string>;
   pickerFieldList?: Array<string>;
+  rangePickerDateFormat?: string;
   mode?: 'multiple' | 'tags';
   min?: number;
   max?: number;
+  placeholder?: string;
 
   // TODO: 未检测
-  placeholder?: string;
   optionList?: Array<SearchInfoItemOption>;
   optionRequestParams?: SearchInfoItemOptionRequestParams;
   extra?: string;
   cascaderFieldList?: Array<string>;
   disabledDate?: (current: any) => boolean;
+  [propsName: string]: any;
 }
 
 export interface SearchInfoItemAction {
