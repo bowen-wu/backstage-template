@@ -121,7 +121,7 @@ interface TableInfoColumnItem<RecordType = any> {
   sortDirections?: SortOrder[];
 }
 
-export interface TableInfoActionItem<U = any, K = any> {
+export interface TableInfoActionItem<U = any, K = any, RecordType = any> {
   key: string;
   type: ButtonType | string;
   route?: string;
@@ -130,6 +130,7 @@ export interface TableInfoActionItem<U = any, K = any> {
   icon?: ReactNode | null;
   title?: (dependValue: U) => U | ReactNode;
   actionText?: (dependValue: K) => K | ReactNode;
+  render?: (value: any, record: RecordType, index: number) => ReactNode | RenderedCell<RecordType>;
 }
 
 interface TableInfoInterface<T = any, RecordType extends object = any> extends TableProps<T> {

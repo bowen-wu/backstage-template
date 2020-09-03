@@ -71,7 +71,10 @@ export default (props: TablePropsInterface) => {
     fixed: columnList.some((column: any) => !!column.fixed) ? 'right' : false,
     render: (text: string, record: any) => (
       <span>
-        {actionList.map((actionItem: TableInfoActionItem) => {
+        {actionList.map((actionItem: TableInfoActionItem, index: number) => {
+          if (actionItem.render) {
+            return actionItem.render(text, record, index);
+          }
           const { route = '', actionText = '', title = '' } = (() => {
             if (actionItem.depend) {
               return {
