@@ -45,7 +45,7 @@ export const getDayStr = (daysFromToday: number, connector = '-') => {
   today.setTime(parseInt((today.getTime() + discrepancyTimestamp).toString(), 10));
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
-  const monthStr = `${month < 9 ? '0' : ''}${month}`;
+  const monthStr = `${month <= 9 ? '0' : ''}${month}`;
   const dayStr = `${today.getDate() < 9 ? '0' : ''}${today.getDate()}`;
   return `${year}${connector}${monthStr}${connector}${dayStr}`;
 };

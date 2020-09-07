@@ -11,6 +11,8 @@ import {
   ObjectInterface,
   TableInfoActionItem,
   SearchInfoItemAction,
+  SearchInfoItem,
+  SearchItemControlType,
 } from '@/components/Interface';
 import DBFn from '@/DB';
 import { ConnectState } from '@/models/connect';
@@ -41,7 +43,7 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     pageObj,
     requestMethod,
     tableListRelatedFields,
-    searchInfo: { externalProcessingActionKeyList = [] },
+    searchInfo: { externalProcessingActionKeyList = [], searchList },
     tableInfo: { pagination = true },
   } = DB[page] || config;
 
@@ -56,8 +58,60 @@ const PageBasic = (props: PageBasicPropsInterface) => {
       }
     : {};
 
+  const defaultSearchInfo = {};
+  searchList.map((searchItem: SearchInfoItem) => {
+    const defaultValue: any = (() => {
+      if (searchItem.type === SearchItemControlType.RangePicker && searchItem.default) {
+        if (searchItem.default instanceof Array && searchItem.default.length === 2) {
+          return [searchItem.default[0], searchItem.default[1]];
+        }
+        throw new Error('rangePicker default 必须是数组，且 length === 2！');
+      }
+      return ['', ''];
+    })();
+
+    if (
+      searchItem.type === SearchItemControlType.RangePicker &&
+      (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2)
+    ) {
+      throw new Error('pickerFieldList 字段必须提供！');
+    }
+    const cascaderSearchInfo = (() => {
+      if (searchItem.type === SearchItemControlType.Cascader) {
+        if (searchItem.cascaderFieldList instanceof Array) {
+          const cascaderObj = {};
+          searchItem.cascaderFieldList.map((cascaderField: string) => {
+            cascaderObj[cascaderField] = '';
+            return null;
+          });
+          return cascaderObj;
+        }
+        throw new Error('请提供正确的 cascaderFieldList 字段！');
+      }
+      return {};
+    })();
+    Object.assign(
+      defaultSearchInfo,
+      cascaderSearchInfo,
+      searchItem.type === SearchItemControlType.RangePicker
+        ? {
+            [`${(searchItem.pickerFieldList as Array<string>)[0]}`]: defaultValue[0],
+            [`${(searchItem.pickerFieldList as Array<string>)[1]}`]: defaultValue[1],
+          }
+        : { [`${searchItem.key}`]: '' },
+      searchItem.type === SearchItemControlType.Select &&
+        (searchItem.mode === 'multiple' || searchItem.mode === 'tags')
+        ? { [`${searchItem.key}`]: [] }
+        : {},
+    );
+    return null;
+  });
+
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({ ...pageInfo });
+  const [searchInfo, setSearchInfo] = useState<PageSearchInfoInterface>({
+    ...pageInfo,
+    ...defaultSearchInfo,
+  });
   const [isReset, setIsReset] = useState<boolean>(false);
 
   let dataSource = [];

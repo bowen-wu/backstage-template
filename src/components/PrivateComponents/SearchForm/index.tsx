@@ -81,16 +81,13 @@ const SearchForm = (props: SearchPropsInterface) => {
       const defaultValue: any = (() => {
         if (searchItem.type === SearchItemControlType.RangePicker && searchItem.default) {
           if (searchItem.default instanceof Array && searchItem.default.length === 2) {
-            const { rangePickerDateFormat = 'YYYY-MM-DD' } = searchItem;
-            return [
-              moment(searchItem.default[0], rangePickerDateFormat),
-              moment(searchItem.default[1], rangePickerDateFormat),
-            ];
+            return [searchItem.default[0], searchItem.default[1]];
           }
           throw new Error('rangePicker default 必须是数组，且 length === 2！');
         }
         return ['', ''];
       })();
+
       if (
         searchItem.type === SearchItemControlType.RangePicker &&
         (!searchItem.pickerFieldList || searchItem.pickerFieldList.length !== 2)
