@@ -370,8 +370,7 @@ export interface StateType {
 
 export interface CurrentUser {
   token: string;
-  username: string;
-  username_cn: string;
+  userName: string;
   role: string;
 
   avatar?: string;
@@ -382,7 +381,7 @@ export interface UserModelState {
   currentUser: CurrentUser;
   status: StateType;
   userPermissionsMenu: MenuDataItem[];
-  userAuthButtonList: string[];
+  userAuthButtonList?: string[];
 }
 
 /**

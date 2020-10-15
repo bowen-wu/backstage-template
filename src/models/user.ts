@@ -8,6 +8,7 @@ const initState = {
     userName: '',
     userId: '',
     id: '',
+    role: '',
   },
   status: {},
   userPermissionsMenu: [{ path: '' }],
@@ -36,6 +37,7 @@ const UserModel: UserModelType = {
   effects: {
     *getUserInfo(_, { call, put }) {
       const response = yield call(getUserInfo);
+      // TODO: is success
       if (response.code === '0') {
         const token = window.localStorage.getItem('token') || '';
         yield put({ type: 'saveCurrentUser', payload: { ...JSON.parse(response.result), token } });

@@ -127,6 +127,10 @@ export default {
     'primary-color': '#FF5400',
   },
   define: {
+    SYSTEM_NAME: '系统名称',
+    REQUEST_EXPIRED_CODE: 10002,
+    REQUEST_SUCCESS_CODE: 0,
+    TOKEN_FIELD: 'token',
     NEED_DRAG: true,
   },
   ignoreMomentLocale: true,

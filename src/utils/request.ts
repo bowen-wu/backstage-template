@@ -45,15 +45,13 @@ const errorHandler = (error: { response: Response }): Response => {
   return response;
 };
 
-console.log('BASEURL -> ', BASEURL);
-
 /**
  * 配置request请求时的默认参数
  */
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
-  prefix: `${BASEURL}${BASEPREFIX}`, // 前缀, 用于覆盖统一设置的prefix
+  prefix: `${BASE_URL}${BASE_PREFIX}`, // 前缀, 用于覆盖统一设置的prefix
 });
 
 /**
@@ -63,23 +61,23 @@ request.interceptors.request.use((url, options) => ({
   options: {
     ...options,
     headers: {
-      Authorization: window.localStorage.getItem('token') || '',
+      [`${TOKEN_FIELD}`]: window.localStorage.getItem('token') || '',
     },
   },
 }));
 
 request.interceptors.response.use(async response => {
   const data = await response.clone().json();
-  if (data.code === '1000002') {
+  if (data.code === REQUEST_EXPIRED_CODE) {
     notification.error({
       message: `登陆过期，请重新登录！`,
       description: data.msg,
     });
     window.localStorage.clear();
-    window.location.href =
-      'http://192.168.5.109/sso-web/?origin=http%3A%2F%2F192.168.5.109%2Fauthority-web%2F%3F';
+
+    // TODO: skip to login page
   }
-  if (data.code === '1') {
+  if (data.code !== REQUEST_SUCCESS_CODE) {
     notification.error({
       message: `${data.errorMsg}`,
     });

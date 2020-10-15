@@ -15,8 +15,12 @@ export interface GlobalHeaderRightProps extends ConnectProps {
   menu?: boolean;
 }
 
+interface Event extends MenuInfo {
+  key: string;
+}
+
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
-  onMenuClick = (event: MenuInfo) => {
+  onMenuClick = (event: Event) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -43,11 +47,11 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
         </Menu.Item>
       </Menu>
     );
-    return currentUser && currentUser.username ? (
+    return currentUser && currentUser.userName ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <img className={styles.avatar} src={Avatar} alt="" />
-          <span className={styles.name}>{currentUser.username}</span>
+          <span className={styles.name}>{currentUser.userName}</span>
         </span>
       </HeaderDropdown>
     ) : (

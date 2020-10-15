@@ -55,7 +55,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '催收系统',
+  title: '更改系统名称',
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;

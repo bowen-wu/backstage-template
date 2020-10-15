@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { connect } from 'dva';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import Logo from '../assets/logo_title.svg';
+import Logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 
 export interface UserLayoutProps extends ConnectProps {
@@ -47,7 +47,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
           </div>
           {children}
         </div>
-        <DefaultFooter links={false} copyright="2020-亚联数科" />
+        <DefaultFooter links={false} copyright={`2020-${SYSTEM_NAME}`} />
       </div>
     </>
   );

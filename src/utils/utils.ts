@@ -46,7 +46,7 @@ export const getDayStr = (daysFromToday: number, connector = '-') => {
   const year = today.getFullYear();
   const month = today.getMonth() + 1;
   const monthStr = `${month <= 9 ? '0' : ''}${month}`;
-  const dayStr = `${today.getDate() < 9 ? '0' : ''}${today.getDate()}`;
+  const dayStr = `${today.getDate() <= 9 ? '0' : ''}${today.getDate()}`;
   return `${year}${connector}${monthStr}${connector}${dayStr}`;
 };
 
@@ -54,14 +54,14 @@ export const getLastMonthStr = (connector = '-') => {
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth();
-  const monthStr = `${month < 9 ? '0' : ''}${month}`;
+  const monthStr = `${month <= 9 ? '0' : ''}${month}`;
   if (month === 0) {
     return `${year - 1}${connector}${12}`;
   }
   return `${year}${connector}${monthStr}`;
 };
 
-export const downloadImage = (imgsrc: string, name?: string) => {
+export const downloadImage = (imageSource: string, name?: string) => {
   const image = new Image();
   image.setAttribute('crossOrigin', 'anonymous');
   image.onload = () => {
@@ -79,7 +79,7 @@ export const downloadImage = (imgsrc: string, name?: string) => {
     a.href = url;
     a.dispatchEvent(event);
   };
-  image.src = imgsrc;
+  image.src = imageSource;
 };
 
 export const isShallowEqualForObject = (obj1: any, obj2: any): boolean => {

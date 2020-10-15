@@ -1,6 +1,6 @@
 import { Alert } from 'antd';
 import React, { Component } from 'react';
-import { Dispatch, AnyAction } from 'redux';
+import { Dispatch } from 'redux';
 import { FormComponentProps } from 'antd/es/form';
 import { connect } from 'dva';
 import LoginComponents from './components/Login';
@@ -11,7 +11,7 @@ import { LoginParamsType, StateType } from '@/components/Interface';
 const { Tab, UserName, Password, Submit } = LoginComponents;
 
 interface LoginProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Dispatch;
   userLogin: StateType;
   submitting?: boolean;
 }

@@ -30,5 +30,9 @@ interface Window {
 }
 
 declare const NEED_DRAG: boolean;
-declare const BASEURL: string;
-declare const BASEPREFIX: string;
+declare const SYSTEM_NAME: string;
+declare const BASE_URL: string;
+declare const BASE_PREFIX: string;
+declare const REQUEST_EXPIRED_CODE: number | string;
+declare const REQUEST_SUCCESS_CODE: number | string;
+declare const TOKEN_FIELD: string;

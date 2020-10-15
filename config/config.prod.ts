@@ -1,6 +1,6 @@
 export default {
   define: {
-    BASEURL: 'prod',
-    BASEPREFIX: '/collection-manager',
+    BASE_URL: '',
+    BASE_PREFIX: '',
   },
 };

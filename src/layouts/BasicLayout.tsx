@@ -2,7 +2,7 @@ import ProLayout, {
   MenuDataItem,
   BasicLayoutProps as ProLayoutProps,
   Settings,
-  DefaultFooter
+  DefaultFooter,
 } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import Link from 'umi/link';
@@ -72,16 +72,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     if (dispatch) {
       dispatch({
         type: 'global/changeLayoutCollapsed',
-        payload
+        payload,
       });
     }
   };
 
   const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: undefined
+    authority: undefined,
   };
 
-  const proLayoutElement = (<ProLayout
+  const proLayoutElement = (
+    <ProLayout
       logo={logo}
       menuHeaderRender={(logoDom, titleDom) => (
         <Link to="/">
@@ -111,7 +112,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           <span>{route.breadcrumbName}</span>
         );
       }}
-      footerRender={() => <DefaultFooter links={false} copyright="2020-亚联数科" />}
+      footerRender={() => <DefaultFooter links={false} copyright={`2020-${SYSTEM_NAME}`} />}
       menuDataRender={(menuList: MenuDataItem[]): MenuDataItem[] => {
         return menuList;
 
@@ -130,15 +131,15 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   return NEED_DRAG ? (
     <DndProvider backend={HTML5Backend}>
-      <Container>
-        {proLayoutElement}
-      </Container>
+      <Container>{proLayoutElement}</Container>
     </DndProvider>
-  ) : proLayoutElement;
+  ) : (
+    proLayoutElement
+  );
 };
 
 export default connect(({ global, settings, user }: ConnectState) => ({
   user,
   collapsed: global.collapsed,
-  settings
+  settings,
 }))(BasicLayout);
