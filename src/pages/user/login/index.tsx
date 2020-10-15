@@ -1,12 +1,11 @@
 import { Alert } from 'antd';
 import React, { Component } from 'react';
-import { Dispatch } from 'redux';
+import { connect, Dispatch } from 'umi';
 import { FormComponentProps } from 'antd/es/form';
-import { connect } from 'dva';
-import LoginComponents from './components/Login';
-import styles from './style.less';
 import { ConnectState } from '@/models/connect';
 import { LoginParamsType, StateType } from '@/components/Interface';
+import LoginComponents from './components/Login';
+import styles from './style.less';
 
 const { Tab, UserName, Password, Submit } = LoginComponents;
 

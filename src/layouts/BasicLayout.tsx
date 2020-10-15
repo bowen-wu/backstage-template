@@ -5,18 +5,16 @@ import ProLayout, {
   DefaultFooter,
 } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
-import Link from 'umi/link';
-import { Dispatch } from 'redux';
-import { connect } from 'dva';
 import { Result, Button } from 'antd';
+import { connect, Link, Dispatch } from 'umi';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState, UserModelState } from '@/models/connect';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import logo from '../assets/logo.svg';
 import Container from '@/components/PrivateComponents/Drag/Container';
+import logo from '../assets/logo.svg';
 
 const noMatch = (
   <Result

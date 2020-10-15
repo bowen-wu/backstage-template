@@ -1,9 +1,8 @@
 import React from 'react';
-import { connect } from 'dva';
 import { PageLoading } from '@ant-design/pro-layout';
-import { Redirect } from 'umi';
+import { connect, ConnectProps, Redirect } from 'umi';
 import { stringify } from 'querystring';
-import { ConnectState, ConnectProps } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/components/Interface';
 
 interface SecurityLayoutProps extends ConnectProps {
@@ -24,6 +23,8 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     this.setState({
       isReady: true,
     });
+
+    // TODO: currentUser
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || JSON.stringify({}),
     );
@@ -39,9 +40,7 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
   render() {
     const { isReady } = this.state;
     const { children, loading, currentUser } = this.props;
-    // todo -> 你可以把它替换成你自己的登录认证规则（比如判断 token 是否存在）,
-    console.log('currentUser -> ', currentUser);
-    const isLogin = currentUser && currentUser.token && true;
+    const isLogin = currentUser && currentUser[`${TOKEN_FIELD}`];
     const queryString = stringify({
       redirect: window.location.href,
     });

@@ -1,9 +1,5 @@
 import { GlobalModelType } from '@/components/Interface';
-import {
-  getPersonAllAuthorizedMenu,
-  resetAccountPassword,
-  uploadFile,
-} from '@/services/global';
+import { getPersonAllAuthorizedMenu, resetAccountPassword, uploadFile } from '@/services/global';
 
 const initState = {
   uploadFileUrl: '',
@@ -38,7 +34,6 @@ const GlobalModel: GlobalModelType = {
     },
 
     *getPersonAllAuthorizedMenu({ payload }, { call, put }) {
-      console.log('global');
       const { userId } = payload;
       const response = yield call(getPersonAllAuthorizedMenu, { userId });
       yield put({

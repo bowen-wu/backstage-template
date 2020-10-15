@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Effect } from 'dva';
-import { Dispatch, AnyAction, Reducer } from 'redux';
 import { CascaderOptionType } from 'antd/lib/cascader';
+import { Reducer, Effect, Dispatch, AnyAction } from 'umi';
 import { ButtonType } from 'antd/lib/button';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { TableProps } from 'antd/lib/table';

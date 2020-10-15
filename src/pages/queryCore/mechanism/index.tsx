@@ -1,7 +1,7 @@
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect } from 'react';
+import { connect } from 'umi';
 import { Spin } from 'antd';
-import { connect } from 'dva';
 import { ConnectState } from '@/models/connect';
 import styles from './index.less';
 

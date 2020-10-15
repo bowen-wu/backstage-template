@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Select, Input, Row, Col, Button, DatePicker, Cascader, InputNumber } from 'antd';
 import { CascaderOptionType, CascaderValueType } from 'antd/lib/cascader';
-import { connect } from 'dva';
 import moment from 'moment';
+import { connect } from 'umi';
 import DBFn from '@/DB';
 import { ConnectState } from '@/models/connect';
 import {

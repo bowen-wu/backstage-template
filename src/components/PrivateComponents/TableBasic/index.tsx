@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import Link from 'umi/link';
 import { Table, Popconfirm } from 'antd';
 import DBFn from '@/DB';
+import { Link } from 'umi';
 import {
   Key,
   SorterResult,
@@ -181,8 +181,7 @@ export default (props: TablePropsInterface) => {
         onChange={onChange}
         rowKey={record =>
           keyList.reduce(
-            (result: string, key: string) =>
-              record[key] ? `${result}-${record[key]}` : result,
+            (result: string, key: string) => (record[key] ? `${result}-${record[key]}` : result),
             String(record.uniqueKey),
           )
         }

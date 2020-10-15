@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Spin } from 'antd';
-import { connect } from 'dva';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import TableBasic from '@/components/PrivateComponents/TableBasic';
 import SearchForm from '@/components/PrivateComponents/SearchForm';
+import { connect } from 'umi';
 import {
   PageSearchInfoInterface,
   PageBasicPropsInterface,
@@ -47,7 +47,13 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     tableInfo: { pagination = true },
   } = DB[page] || config;
 
-  if (pagination && (!pageObj || !Object.keys(pageObj).length || typeof pageObj[`${pageObj.currentField}`] !== 'number' || typeof pageObj[`${pageObj.pageSizeField}`] !== 'number')) {
+  if (
+    pagination &&
+    (!pageObj ||
+      !Object.keys(pageObj).length ||
+      typeof pageObj[`${pageObj.currentField}`] !== 'number' ||
+      typeof pageObj[`${pageObj.pageSizeField}`] !== 'number')
+  ) {
     throw new Error('请传入正确的 pageObj');
   }
 
@@ -130,7 +136,6 @@ const PageBasic = (props: PageBasicPropsInterface) => {
 
   useEffect(() => {
     const loadData = async () => {
-      console.log('extraSearchInfo -> ', extraSearchInfo);
       setLoading(true);
       const method = requestMethod || MethodEnum.GET;
       await dispatch({
@@ -219,8 +224,6 @@ const PageBasic = (props: PageBasicPropsInterface) => {
     extra: TableCurrentDataSource<RecordType>,
   ) => void = useCallback(
     (currentPagination, filters, sorter, extra): void => {
-      console.log('currentPagination -> ', currentPagination);
-      console.log('extra -> ', extra);
       if (props.onTableChange) {
         props.onTableChange(currentPagination, filters, sorter, extra);
       }

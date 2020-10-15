@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, message } from 'antd';
-import { connect } from 'dva';
 import { ObjectInterface, UploadFilePropInterface } from '@/components/Interface';
 import { ConnectState } from '@/models/connect';
+import { connect } from 'umi';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons/lib';
 
 const UploadFile = (props: UploadFilePropInterface) => {

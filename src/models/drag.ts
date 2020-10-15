@@ -1,4 +1,4 @@
-import { Reducer } from 'redux';
+import { Reducer } from 'umi';
 
 export interface DragState {
   id: string;
@@ -17,7 +17,7 @@ export interface DragType {
 const initState = {
   id: 'init',
   left: 0,
-  top: 0
+  top: 0,
 };
 
 const Drag: DragType = {
@@ -29,10 +29,10 @@ const Drag: DragType = {
     savePosition(state = initState, action) {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
-    }
-  }
+    },
+  },
 };
 
 export default Drag;

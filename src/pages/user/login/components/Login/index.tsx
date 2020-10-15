@@ -2,8 +2,8 @@ import { Form, Tabs } from 'antd';
 import React, { Component } from 'react';
 import { FormComponentProps } from 'antd/es/form';
 import classNames from 'classnames';
-import LoginContext, { LoginContextProps } from './LoginContext';
 import { LoginParamsType } from '@/components/Interface';
+import LoginContext, { LoginContextProps } from './LoginContext';
 import LoginItem, { LoginItemProps, LoginItemType } from './LoginItem';
 
 import LoginSubmit from './LoginSubmit';

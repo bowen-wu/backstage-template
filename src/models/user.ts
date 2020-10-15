@@ -37,8 +37,7 @@ const UserModel: UserModelType = {
   effects: {
     *getUserInfo(_, { call, put }) {
       const response = yield call(getUserInfo);
-      // TODO: is success
-      if (response.code === '0') {
+      if (response.code === REQUEST_SUCCESS_CODE) {
         const token = window.localStorage.getItem('token') || '';
         yield put({ type: 'saveCurrentUser', payload: { ...JSON.parse(response.result), token } });
       }

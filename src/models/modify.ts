@@ -1,5 +1,5 @@
-import {ModifyModelType} from "@/components/Interface";
-import {modifyInfo} from "@/services/modify";
+import { ModifyModelType } from '@/components/Interface';
+import { modifyInfo } from '@/services/modify';
 
 const Modify: ModifyModelType = {
   namespace: 'modify',
@@ -14,8 +14,8 @@ const Modify: ModifyModelType = {
    put：发出一个 Action，类似于 dispatch
    */
   effects: {
-    * modifyInfo({payload}, {call}) {
-      const {modifyUrl, params = {}, method = 'POST', paramsPosition = 'data'} = payload;
+    *modifyInfo({ payload }, { call }) {
+      const { modifyUrl, params = {}, method = 'POST', paramsPosition = 'data' } = payload;
       yield call(modifyInfo, modifyUrl, method, params, paramsPosition);
     },
   },

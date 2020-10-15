@@ -1,8 +1,8 @@
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
 import React from 'react';
-import { connect } from 'dva';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { connect, ConnectProps } from 'umi';
+import { ConnectState } from '@/models/connect';
 import Logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 

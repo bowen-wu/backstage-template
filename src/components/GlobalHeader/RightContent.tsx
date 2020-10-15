@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'dva';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectState } from '@/models/connect';
+import { ConnectProps, connect } from 'umi';
 import Avatar from './AvatarDropdown';
 
 import styles from './index.less';
