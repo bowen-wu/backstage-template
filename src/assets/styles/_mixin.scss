@@ -1,0 +1,192 @@
+@mixin flex($justifyContent: flex-start, $alignContent: center) {
+  display: flex;
+  align-items: $alignContent;
+  justify-content: $justifyContent;
+}
+@mixin buttonStyle() {
+  width: 45%;
+  padding: 9px 0;
+  @include fontLineColor(16px, 22px, #fff);
+  border-radius: 5px;
+}
+@mixin modalStyle {
+  &-authorization {
+    padding: 20px;
+    position: relative;
+    &-close {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 18px;
+      right: 20px;
+    }
+    &-header {
+      @include flex(flex-start, center);
+      &-image {
+        width: 30px;
+        height: 30px;
+      }
+      &-name {
+        margin-left: 5px;
+        @include fontLineColor(15px, 21px, #333);
+        font-weight: bold;
+        &-apply {
+          @include fontLineColor(14px, 20px, #333);
+          margin-left: 22px;
+          font-weight: normal;
+        }
+      }
+    }
+    &-content {
+      margin-top: 22px;
+      text-align: left;
+      &-title {
+        @include fontLineColor(14px, 20px, #333);
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      &-objective {
+        &-type {
+          @include flex(flex-start, center);
+          margin-bottom: $padding;
+          &-dot {
+            margin-right: 8px;
+            width: 6px;
+            height: 6px;
+            background-color: #000;
+            border-radius: 50%;
+          }
+        }
+      }
+      &-rule {
+        margin-top: 40px;
+        @include flex(flex-start, center);
+        @include fontLineColor(12px, 17px, #333);
+        &-type {
+          margin-left: 5px;
+          @include fontLineColor(12px, 17px, #d3b381);
+          &-color {
+            color: #d3b381;
+            &:hover {
+              color: #d3b381;
+            }
+          }
+        }
+      }
+    }
+    &-footer {
+      margin-top: 15px;
+      @include flex(space-between, center);
+      &-no {
+        @include buttonStyle();
+        background-color: #ccc;
+      }
+      &-yes {
+        @include buttonStyle();
+        background: linear-gradient(to right, #f0d9c5, #bd9f8a);
+      }
+    }
+  }
+}
+
+@mixin fontLineColor($fontSize: 14px, $lineHeight: 16px, $color: #333) {
+  color: $color;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+  white-space: nowrap;
+}
+
+@mixin submit($marginBottom: 15px) {
+  width: 100%;
+  margin-bottom: $marginBottom;
+  padding: $padding;
+  background-color: #fff;
+  border-radius: $borderRadius;
+}
+
+@mixin widthHeight($width: 100%, $height: 100%) {
+  width: $width;
+  height: $height;
+}
+
+@mixin textOverflowHidden($maxWidth) {
+  max-width: $maxWidth;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+@mixin multipleLineTextOverflow($lineNum: 2) {
+  -webkit-line-clamp: $lineNum;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+@mixin icon($width: 100%, $height: 100%) {
+  @include widthHeight($width, $height);
+
+  &-img,
+  img {
+    @include widthHeight();
+    vertical-align: top;
+  }
+}
+
+@mixin triangle($direction, $bgc, $border) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    border: $border solid transparent;
+    content: '';
+    border-#{$direction}-color: $bgc;
+  }
+}
+
+// 1像素边框
+@mixin oneBorder($borderColor, $borderRadius: 4px) {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    border: 1px solid $borderColor;
+    border-radius: $borderRadius;
+    -webkit-transform: scale(0.5);
+    -webkit-transform-origin: top left;
+    transform: scale(0.5);
+    transform-origin: top left;
+  }
+}
+// 单方向1像素边框
+@mixin onePixel($direction, $borderColor: #e7e7e7) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    right: 0;
+    left: 0;
+    content: '';
+    #{$direction}: 0;
+    border-top: 1px solid $borderColor;
+    transform: scaleY(0.5);
+    transform-origin: left top;
+  }
+}
+
+@mixin closeModelIcon {
+  &-close {
+    position: absolute;
+    top: $padding;
+    right: $padding;
+    @include icon(34px, 34px);
+  }
+}

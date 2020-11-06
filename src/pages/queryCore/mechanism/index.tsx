@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'umi';
 import { Spin } from 'antd';
 import { ConnectState } from '@/models/connect';
-import styles from './index.less';
 
 const Mechanism = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,7 +12,7 @@ const Mechanism = () => {
   }, []);
 
   return (
-    <PageHeaderWrapper className={styles.main}>
+    <PageHeaderWrapper>
       <Spin spinning={loading} size="large">
         this is Mechanism Page
       </Spin>

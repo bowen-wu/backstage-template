@@ -25,10 +25,8 @@ export function getAuthority(str?: string): string | string[] {
 }
 
 export function setAuthority(authority: string | string[]): void {
-  console.log('todo: 这里需要认证身份，阻止刷新重新登录。authority -> ', authority);
-
+  // TODO: 这里需要认证身份，阻止刷新重新登录。authority
   const proAuthority = typeof authority === 'string' ? [authority] : authority;
-  localStorage.setItem('mind-selling-backstage-authority', JSON.stringify(proAuthority));
-  // auto reload
+  localStorage.setItem('backstage-authority', JSON.stringify(proAuthority));
   reloadAuthorized();
 }

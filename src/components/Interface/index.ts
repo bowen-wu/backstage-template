@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { CascaderOptionType } from 'antd/lib/cascader';
-import { Reducer, Effect, Dispatch, AnyAction } from 'umi';
+import { Reducer, Effect, Dispatch } from 'umi';
 import { ButtonType } from 'antd/lib/button';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { TableProps } from 'antd/lib/table';
@@ -16,6 +16,7 @@ import {
 import { RenderedCell } from 'rc-table/lib/interface';
 import { TableProps as RcTableProps } from 'rc-table/lib/Table';
 import { OptionCoreData } from 'rc-select/lib/interface';
+import { UserModelState } from '@/models/user';
 
 /**
  * public start
@@ -184,7 +185,7 @@ export interface ZoomPicturePropsInterface {
 }
 
 export interface UploadFilePropInterface {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Dispatch;
   uploadSuccess: (url: string) => void;
   isInit: boolean;
   defaultValue?: string;
@@ -260,7 +261,7 @@ export interface TablePropsInterface<RecordType extends object = any> extends Pr
 }
 
 export interface SearchPropsInterface extends PropsInterface {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Dispatch;
   config?: DBItemInterface;
   actionsHandle?: (action: SearchInfoItemAction, searchInfo: object, record?: any) => void;
   searchForm: SearchFormModelState;
@@ -323,20 +324,6 @@ export interface SearchFormModelState {
   [propsName: string]: Array<any>;
 }
 
-export interface UserModelType {
-  namespace: 'user';
-  state: UserModelState;
-  effects: {
-    getUserPermissionsMenu: Effect;
-    getUserInfo: Effect;
-  };
-  reducers: {
-    saveCurrentUser: Reducer<UserModelState>;
-    saveUserPermissionsMenu: Reducer<UserModelState>;
-  };
-  subscriptions?: object;
-}
-
 export interface TableListModelType {
   namespace: 'tableList';
   state: TableListModelState;
@@ -359,28 +346,6 @@ export interface SearchFormModelType {
     saveOptionList: Reducer<SearchFormModelState>;
   };
   subscriptions?: object;
-}
-
-export interface StateType {
-  status?: 'ok' | 'error';
-  type?: string;
-  currentAuthority?: 'user' | 'guest' | 'admin';
-}
-
-export interface CurrentUser {
-  token: string;
-  userName: string;
-  role: string;
-
-  avatar?: string;
-  group?: Array<any>;
-}
-
-export interface UserModelState {
-  currentUser: CurrentUser;
-  status: StateType;
-  userPermissionsMenu: MenuDataItem[];
-  userAuthButtonList?: string[];
 }
 
 /**

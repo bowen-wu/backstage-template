@@ -1,19 +1,13 @@
 import routes from './routes';
-import { utils } from 'umi';
+import { defineConfig } from 'umi';
 
-const { winPath } = utils;
-
-export default {
+export default defineConfig({
   hash: true,
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
   dva: {
     hmr: true,
-  },
-  locale: {
-    default: 'zh-CN',
-    baseNavigator: true,
   },
   pwa: false,
   targets: {
@@ -29,41 +23,39 @@ export default {
     REQUEST_SUCCESS_CODE: 0,
     TOKEN_FIELD: 'token',
     NEED_DRAG: true,
+    RESPONSE_DATA_FIELD: 'data',
+    FAKE_LOGIN: true,
   },
   ignoreMomentLocale: true,
   lessLoader: {
-    javascriptEnabled: true,
-  },
-  cssLoader: {
-    modules: {
-      getLocalIdent: (
-        context: {
-          resourcePath: string;
-        },
-        _: string,
-        localName: string,
-      ) => {
-        if (
-          context.resourcePath.includes('node_modules') ||
-          context.resourcePath.includes('ant.design.pro.less') ||
-          context.resourcePath.includes('global.less')
-        ) {
-          return localName;
-        }
-        const match = context.resourcePath.match(/src(.*)/);
-        if (match && match[1]) {
-          const antdProPath = match[1].replace('.less', '');
-          const arr = winPath(antdProPath)
-            .split('/')
-            .map((a: string) => a.replace(/([A-Z])/g, '-$1'))
-            .map((a: string) => a.toLowerCase());
-          return `antd-pro${arr.join('-')}-${localName}`.replace(/--/g, '-');
-        }
-        return localName;
-      },
+    modifyVars: {
+      // 或者可以通过 less 文件覆盖（文件路径为绝对路径）
+      hack: `true; @import "~antd/es/style/themes/default.less";`,
     },
+  },
+  sass: {},
+  chainWebpack: config => {
+    const oneOfsMap = config.module.rule('sass').oneOfs.values();
+    oneOfsMap.forEach(item => {
+      item
+        .use('sass-resources-loader')
+        .loader('sass-resources-loader')
+        .options({
+          /**
+           * scss 全局文件
+           * 注意：此处是 ./src/**
+           */
+          resources: [
+            './src/assets/styles/_variable.scss',
+            './src/assets/styles/_mixin.scss',
+            './src/assets/styles/_zIndex.scss',
+            './src/assets/styles/_function.scss',
+          ],
+        })
+        .end();
+    });
   },
   manifest: {
     basePath: '/',
   },
-};
+});

@@ -14,11 +14,6 @@ const GlobalModel: GlobalModelType = {
 
   state: initState,
 
-  /** Action 处理器，处理异步动作
-   dva 提供多个 effect 函数内部的处理函数，比较常用的是 call 和 put。
-   call：执行异步函数
-   put：发出一个 Action，类似于 dispatch
-   */
   effects: {
     *uploadFile({ payload }, { call, put }) {
       const { data } = payload;
@@ -43,7 +38,6 @@ const GlobalModel: GlobalModelType = {
     },
   },
 
-  // Action 处理器，处理同步动作，用来算出最新的 State
   reducers: {
     changeLayoutCollapsed(state = initState, { payload }) {
       return {
@@ -70,9 +64,6 @@ const GlobalModel: GlobalModelType = {
       };
     },
   },
-
-  // elm@0.17 的新概念，在 dom ready 后执行
-  subscriptions: {},
 };
 
 export default GlobalModel;

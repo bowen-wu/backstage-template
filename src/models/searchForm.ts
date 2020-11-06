@@ -25,7 +25,6 @@ const SearchForm: SearchFormModelType = {
     },
   },
 
-  // Action 处理器，处理同步动作，用来算出最新的 State
   reducers: {
     saveOptionList(state, action) {
       const { relatedFieldsPath, labelField, valueField } = action.payload;

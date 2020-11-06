@@ -1,0 +1,9 @@
+/**
+使用方法：
+  1. 和 zIndex 联合使用，zIndex 中的 $list 即以下的 list
+  2. 在页面 scss 中局部修改 $list
+    a. $modal-elements: append($modal-elements, close-button);
+    b. $elements: insert-nth($elements, sidebar-filters, 3);
+ */
+$elements: negative, background-color, border, auto, element, float, positive, modals;
+$modal-elements: fields, form-controls, errors, autocomplete-dropdown;

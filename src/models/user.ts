@@ -1,11 +1,48 @@
 import { MenuDataItem } from '@ant-design/pro-layout';
-import { getUserPermissionsMenu, getUserInfo } from '@/services/user';
-import { UserModelType } from '@/components/Interface';
+import { getUserPermissionsMenu, getUserInfo, accountLogin } from '@/services/user';
+import { getPageQuery } from '@/utils/utils';
+import { history } from 'umi';
+import { setAuthority } from '@/utils/authority';
+import { Effect, Reducer } from '@@/plugin-dva/connect';
+
+export interface StateType {
+  status?: 'ok' | 'error';
+  type?: string;
+  currentAuthority?: 'user' | 'guest' | 'admin';
+}
+
+export interface CurrentUser {
+  token: string;
+  username: string;
+
+  avatar?: string;
+}
+
+export interface UserModelState {
+  currentUser: CurrentUser;
+  status: StateType;
+  userPermissionsMenu: MenuDataItem[];
+  userAuthButtonList?: string[];
+}
+
+export interface UserModelType {
+  namespace: 'user';
+  state: UserModelState;
+  effects: {
+    getUserPermissionsMenu: Effect;
+    getUserInfo: Effect;
+    login: Effect;
+  };
+  reducers: {
+    saveCurrentUser: Reducer<UserModelState>;
+    saveUserPermissionsMenu: Reducer<UserModelState>;
+  };
+}
 
 const initState = {
   currentUser: {
     token: '',
-    userName: '',
+    username: '',
     userId: '',
     id: '',
     role: '',
@@ -23,40 +60,77 @@ const userPermissionsMenu = (menuList: MenuDataItem[]): MenuDataItem[] =>
   }));
 
 const UserModel: UserModelType = {
-  // reducer 在 combine 到 rootReducer 时的 key 值
   namespace: 'user',
 
-  // reducer 的 initialState, Model 当前的状态
   state: initState,
 
-  /** Action 处理器，处理异步动作
-   dva 提供多个 effect 函数内部的处理函数，比较常用的是 call 和 put。
-   call：执行异步函数
-   put：发出一个 Action，类似于 dispatch
-   */
   effects: {
+    *login({ payload }, { call, put }) {
+      if (FAKE_LOGIN) {
+        const token = 'fake_token';
+        yield put({
+          type: 'saveCurrentUser',
+          payload: { currentUser: { [`${TOKEN_FIELD}`]: token, username: payload.username } },
+        });
+        const urlParams = new URL(window.location.href);
+        const params = getPageQuery();
+        let { redirect } = params as { redirect: string };
+        if (redirect) {
+          const redirectUrlParams = new URL(redirect);
+          if (redirectUrlParams.origin === urlParams.origin) {
+            redirect = redirect.substr(urlParams.origin.length);
+            if (redirect.match(/^\/.*#/)) {
+              redirect = redirect.substr(redirect.indexOf('#') + 1);
+            }
+          } else {
+            window.location.href = '/';
+          }
+        }
+        history.replace(redirect || '/');
+        return;
+      }
+      const response = yield call(accountLogin, { ...payload });
+      if (response.code === REQUEST_SUCCESS_CODE) {
+        const token =
+          response[REQUEST_SUCCESS_CODE].token || window.localStorage.getItem('token') || '';
+        yield put({
+          type: 'saveCurrentUser',
+          payload: {
+            currentUser: {
+              username: payload.username,
+              ...JSON.parse(response[RESPONSE_DATA_FIELD]),
+              [`${TOKEN_FIELD}`]: token,
+            },
+          },
+        });
+      }
+    },
     *getUserInfo(_, { call, put }) {
       const response = yield call(getUserInfo);
       if (response.code === REQUEST_SUCCESS_CODE) {
         const token = window.localStorage.getItem('token') || '';
-        yield put({ type: 'saveCurrentUser', payload: { ...JSON.parse(response.result), token } });
+        yield put({
+          type: 'saveCurrentUser',
+          payload: { ...JSON.parse(response[RESPONSE_DATA_FIELD]), token },
+        });
       }
     },
     *getUserPermissionsMenu({ payload }, { call, put }) {
       const response = yield call(getUserPermissionsMenu, payload);
       yield put({
         type: 'saveUserPermissionsMenu',
-        payload: userPermissionsMenu(response.result.menus),
+        payload: userPermissionsMenu(response[RESPONSE_DATA_FIELD].menus),
       });
     },
   },
 
-  // Action 处理器，处理同步动作，用来算出最新的 State
   reducers: {
-    saveCurrentUser(state = initState, action) {
+    saveCurrentUser(state = initState, { payload }) {
+      window.localStorage.setItem('currentUser', JSON.stringify(payload.currentUser || {}));
+      setAuthority(payload.currentUser ? payload.currentUser.username : '');
       return {
         ...state,
-        currentUser: action.payload || {},
+        currentUser: payload.currentUser || {},
       };
     },
     saveUserPermissionsMenu(state = initState, action) {
@@ -66,9 +140,6 @@ const UserModel: UserModelType = {
       };
     },
   },
-
-  // elm@0.17 的新概念，在 dom ready 后执行
-  subscriptions: {},
 };
 
 export default UserModel;

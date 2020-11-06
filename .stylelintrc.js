@@ -8,5 +8,9 @@ module.exports = {
     'declaration-empty-line-before': null,
     'no-descending-specificity': null,
     'no-duplicate-selectors': null,
+    'color-hex-length': 'short',
+    'at-rule-no-unknown': null,
+    'scss/at-rule-no-unknown': true,
+    'function-name-case': 'lower',
   },
 };

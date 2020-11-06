@@ -1,7 +1,9 @@
 import request from '@/utils/request';
-import {LoginParamsType, MethodEnum} from '@/components/Interface';
+import { MethodEnum } from '@/components/Interface';
+import { LoginParamsType } from '@/pages/user/login';
 
 export async function accountLogin(params: LoginParamsType) {
+  // TODO: 登录接口未定
   return request('/user/login', {
     method: 'POST',
     params,
@@ -18,7 +20,7 @@ export async function getUserPermissionsMenu() {
   });
 }
 
-export async function getUserInfo () {
+export async function getUserInfo() {
   return request('/sso/user/initUser', {
     method: MethodEnum.POST,
   });

@@ -20,7 +20,7 @@
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint:prettier": "check-prettier lint",
-    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+    "lint:style": "stylelint --fix \"src/**/*.scss\" --syntax scss",
     "prettier": "prettier -c --write \"**/*\"",
     "start:no-mock": "cross-env MOCK=none umi dev",
     "start:no-ui": "cross-env UMI_UI=none umi dev",
@@ -37,8 +37,8 @@
     }
   },
   "lint-staged": {
-    "**/*.less": "stylelint --syntax less",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+    "**/*.scss": "stylelint --syntax scss",
+    "**/*.{js,jsx,tsx,ts,scss,md,json}": [
       "prettier --write",
       "git add"
     ],
@@ -51,10 +51,12 @@
     "not ie <= 10"
   ],
   "dependencies": {
+    "@ant-design/compatible": "^1.0.8",
     "@ant-design/icons": "^4.2.1",
     "@ant-design/pro-layout": "^4.10.0",
     "@ant-design/pro-table": "^1.0.13",
     "@antv/data-set": "^0.10.2",
+    "@umijs/plugin-sass": "^1.1.1",
     "antd": "^4.4.2",
     "braft-editor": "^2.3.8",
     "classnames": "^2.2.6",
@@ -71,15 +73,11 @@
     "react-dnd-html5-backend": "^11.1.3",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
-    "umi-request": "^1.0.8",
-    "umi": "^3.2.23"
+    "umi": "^3.2.23",
+    "umi-request": "^1.0.8"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.14",
-    "@umijs/plugin-blocks": "^2.2.1",
-    "@umijs/preset-ant-design-pro": "^1.2.2",
-    "@umijs/preset-ui": "^2.2.8",
-    "@umijs/preset-react": "^1.6.10",
     "@types/classnames": "^2.2.7",
     "@types/express": "^4.17.0",
     "@types/history": "^4.7.2",
@@ -89,7 +87,12 @@
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "^5.0.13",
+    "@typescript-eslint/parser": "^4.6.1",
     "@umijs/fabric": "^2.0.0-beta.3",
+    "@umijs/plugin-blocks": "^2.2.1",
+    "@umijs/preset-ant-design-pro": "^1.2.2",
+    "@umijs/preset-react": "^1.6.10",
+    "@umijs/preset-ui": "^2.2.8",
     "chalk": "^3.0.0",
     "check-prettier": "^1.0.3",
     "cross-env": "^6.0.0",
@@ -108,8 +111,11 @@
     "lint-staged": "^9.0.0",
     "mockjs": "^1.0.1-beta3",
     "node-fetch": "^2.6.0",
+    "node-sass": "^5.0.0",
     "prettier": "^1.19.1",
     "pro-download": "1.0.1",
+    "sass-loader": "^10.0.5",
+    "sass-resources-loader": "^2.1.1",
     "stylelint": "^13.6.1",
     "stylelint-config-standard": "^20.0.0"
   },
@@ -122,7 +128,7 @@
   "checkFiles": [
     "src/**/*.js*",
     "src/**/*.ts*",
-    "src/**/*.less",
+    "src/**/*.scss",
     "config/**/*.js*",
     "scripts/**/*.js"
   ]

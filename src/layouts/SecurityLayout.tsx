@@ -3,7 +3,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 import { connect, ConnectProps, Redirect } from 'umi';
 import { stringify } from 'querystring';
 import { ConnectState } from '@/models/connect';
-import { CurrentUser } from '@/components/Interface';
+import { CurrentUser } from '@/models/user';
 
 interface SecurityLayoutProps extends ConnectProps {
   loading?: boolean;
@@ -23,16 +23,14 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
     this.setState({
       isReady: true,
     });
-
-    // TODO: currentUser
     const currentUser = JSON.parse(
       window.localStorage.getItem('currentUser') || JSON.stringify({}),
     );
     const { dispatch } = this.props;
-    if (dispatch) {
+    if (dispatch && window.localStorage.getItem('currentUser')) {
       dispatch({
         type: 'user/saveCurrentUser',
-        payload: currentUser,
+        payload: { currentUser },
       });
     }
   }
@@ -40,7 +38,8 @@ class SecurityLayout extends React.Component<SecurityLayoutProps, SecurityLayout
   render() {
     const { isReady } = this.state;
     const { children, loading, currentUser } = this.props;
-    const isLogin = currentUser && currentUser[`${TOKEN_FIELD}`];
+
+    const isLogin = Boolean(currentUser && currentUser[`${TOKEN_FIELD}`]);
     const queryString = stringify({
       redirect: window.location.href,
     });

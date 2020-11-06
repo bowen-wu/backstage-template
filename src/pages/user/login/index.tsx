@@ -1,111 +1,64 @@
-import { Alert } from 'antd';
-import React, { Component } from 'react';
-import { connect, Dispatch } from 'umi';
-import { FormComponentProps } from 'antd/es/form';
+import React from 'react';
 import { ConnectState } from '@/models/connect';
-import { LoginParamsType, StateType } from '@/components/Interface';
-import LoginComponents from './components/Login';
-import styles from './style.less';
+import { connect } from '@@/plugin-dva/exports';
+import { Form, Input, Button } from 'antd';
+import { Dispatch } from 'umi';
+import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
+import scopedClasses from '@/utils/scopedClasses';
+import './index.scss';
 
-const { Tab, UserName, Password, Submit } = LoginComponents;
+const sc = scopedClasses('login');
+
+export interface LoginParamsType {
+  username: string;
+  password: string;
+}
+
+const layout = {
+  wrapperCol: { span: 24 },
+};
 
 interface LoginProps {
   dispatch: Dispatch;
-  userLogin: StateType;
-  submitting?: boolean;
 }
 
-interface LoginState {
-  type: string;
-}
-
-class Login extends Component<LoginProps, LoginState> {
-  loginForm: FormComponentProps['form'] | undefined | null = undefined;
-
-  state: LoginState = {
-    type: 'account',
-  };
-
-  handleSubmit = async (err: unknown, values: LoginParamsType) => {
-    if (!err) {
-      const { dispatch } = this.props;
-      await dispatch({
-        type: 'user/login',
-        payload: values,
-      });
-    }
-  };
-
-  onTabChange = (type: string) => {
-    this.setState({
-      type,
+const Login = (props: LoginProps) => {
+  const { dispatch } = props;
+  const onFinish = async (values: LoginParamsType) => {
+    await dispatch({
+      type: 'user/login',
+      payload: values,
     });
   };
 
-  renderMessage = (content: string) => (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
+  return (
+    <div className={sc()}>
+      <Form
+        className={sc('form')}
+        {...layout}
+        name="basic"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+      >
+        <Form.Item name="username" rules={[{ required: true, message: '请输入用户名!' }]}>
+          <Input prefix={<UserOutlined />} placeholder="用户名" className={sc('input')} />
+        </Form.Item>
 
-  render() {
-    const { userLogin = {}, submitting } = this.props;
-    const { status, type: loginType } = userLogin;
-    const { type } = this.state;
-    return (
-      <div className={styles.main}>
-        <LoginComponents
-          defaultActiveKey={type}
-          onTabChange={this.onTabChange}
-          onSubmit={this.handleSubmit}
-          onCreate={(form?: FormComponentProps['form']) => {
-            this.loginForm = form;
-          }}
-        >
-          <Tab key="account" tab="登录">
-            {status === 'error' &&
-              loginType === 'account' &&
-              !submitting &&
-              this.renderMessage('账号或密码错误')}
-            <UserName
-              name="userName"
-              placeholder="账号"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入账号!',
-                },
-              ]}
-            />
-            <Password
-              name="password"
-              placeholder="密码"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码！',
-                },
-              ]}
-              onPressEnter={e => {
-                e.preventDefault();
-                if (this.loginForm) {
-                  this.loginForm.validateFields(this.handleSubmit);
-                }
-              }}
-            />
-          </Tab>
-          <div style={{ textAlign: 'center' }}>忘记密码请联系管理人员</div>
-          <Submit loading={submitting}>登录</Submit>
-        </LoginComponents>
-      </div>
-    );
-  }
-}
+        <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
+          <Input.Password prefix={<LockOutlined />} placeholder="密码" className={sc('input')} />
+        </Form.Item>
+
+        <div className={sc('tips')}>忘记密码请联系管理人员</div>
+
+        <Form.Item>
+          <Button className={sc('action')} type="primary" htmlType="submit">
+            登录
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
+  );
+};
 
 export default connect(({ login, loading }: ConnectState) => ({
   userLogin: login,

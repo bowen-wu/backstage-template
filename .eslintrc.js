@@ -8,6 +8,8 @@ module.exports = {
     REQUEST_EXPIRED_CODE: true,
     REQUEST_SUCCESS_CODE: true,
     TOKEN_FIELD: true,
+    FAKE_LOGIN: true,
+    RESPONSE_DATA_FIELD: true,
   },
   rules: {
     'no-void': 0,
@@ -16,5 +18,9 @@ module.exports = {
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
     '@typescript-eslint/quotes': ['error', 'single', { allowTemplateLiterals: true }],
     'no-console': ['error', { allow: ['warn', 'error'] }],
+  },
+  parserOptions: {
+    project: 'tsconfig.json',
+    createDefaultProgram: true,
   },
 };
