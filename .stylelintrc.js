@@ -10,7 +10,5 @@ module.exports = {
     'no-duplicate-selectors': null,
     'color-hex-length': 'short',
     'at-rule-no-unknown': null,
-    'scss/at-rule-no-unknown': true,
-    'function-name-case': 'lower',
   },
 };

@@ -5,7 +5,7 @@ import { Form, Input, Button } from 'antd';
 import { Dispatch } from 'umi';
 import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 import scopedClasses from '@/utils/scopedClasses';
-import './index.scss';
+import './index.less';
 
 const sc = scopedClasses('login');
 

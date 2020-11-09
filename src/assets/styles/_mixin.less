@@ -1,0 +1,53 @@
+.flex(@justifyContent: flex-start, @alignContent: center) {
+  display: flex;
+  align-items: @alignContent;
+  justify-content: @justifyContent;
+}
+
+.fontLineColor(@fontSize: 14px, @lineHeight: 16px, @color: #333) {
+  color: @color;
+  font-size: @fontSize;
+  line-height: @lineHeight;
+  white-space: nowrap;
+}
+
+.widthHeight(@width: 100%, @height: 100%) {
+  width: @width;
+  height: @height;
+}
+
+.textOverflowHidden(@maxWidth) {
+  max-width: @maxWidth;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.multipleLineTextOverflow(@lineNum: 2) {
+  -webkit-line-clamp: @lineNum;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.icon(@width: 100%, @height: 100%) {
+  .widthHeight(@width, @height);
+
+  &-img, img {
+    .widthHeight();
+    vertical-align: top;
+  }
+}
+
+.triangle(@direction, @bgc, @border) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    border: @border solid transparent;
+    content: '';
+    border-@{direction}-color: @bgc;
+  }
+}
